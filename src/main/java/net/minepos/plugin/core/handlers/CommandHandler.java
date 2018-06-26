@@ -36,16 +36,12 @@ public final class CommandHandler implements CommandExecutor {
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] badArgs) {
         if (badArgs.length >= 1) {
             for (Command cmd : commandsList) {
-                try {
-                    String msg = stringUtils.arrayToString(badArgs, " ");
-                    String name = commands.getCommand(cmd.getCommand());
-                    String[] args = msg.toLowerCase().replace(name.toLowerCase(), "").trim().split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+                String msg = stringUtils.arrayToString(badArgs, " ");
+                String name = commands.getCommand(cmd.getCommand());
+                String[] args = msg.toLowerCase().replace(name.toLowerCase(), "").trim().split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
-                    if (stringUtils.startsWith(msg, name)) {
-                        cmd.run(sender, args[0].isEmpty() ? new String[]{} : args);
-                    }
-                } catch (Exception e) {
-
+                if (stringUtils.startsWith(msg, name)) {
+                    cmd.run(sender, args[0].isEmpty() ? new String[]{} : args);
                 }
             }
         }
