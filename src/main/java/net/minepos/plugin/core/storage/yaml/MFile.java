@@ -58,7 +58,7 @@ public final class MFile {
     }
 
     private boolean isYaml(File file) {
-        return file.getPath().endsWith(".yaml");
+        return file.getPath().endsWith(".yml");
     }
 
     private void insertIntoMap(String name, File file) {
@@ -92,4 +92,8 @@ public final class MFile {
 
         return new YamlConfiguration();
     }
+
+//    public File getFile(String name) {
+//
+//    }
 }

@@ -1,0 +1,10 @@
+name: MinePoS
+authors: [PiggyPiglet, AndrewAubury]
+version: @version@
+main: net.minepos.plugin.MinePoS
+website: https://minepos.net
+description: MinePoS link for spigot
+commands:
+  minepos:
+    description: oof
+    alises: mp

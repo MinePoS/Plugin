@@ -1,6 +1,7 @@
 package net.minepos.plugin.core.utils.strings;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2018
@@ -14,5 +15,9 @@ public final class StringUtils {
         }
 
         return msg.toLowerCase().startsWith(str.toLowerCase());
+    }
+
+    public String arrayToString(String[] array, String delimiter) {
+        return Arrays.stream(array).collect(Collectors.joining(delimiter));
     }
 }
