@@ -1,3 +1,7 @@
+base-commands:
+  - minepos
+  - buy
+API-KEY: 123
 commands:
   test:
     command: "oof"
