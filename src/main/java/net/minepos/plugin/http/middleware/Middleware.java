@@ -14,23 +14,26 @@ import java.io.OutputStream;
  * ------------------------------
  */
 public abstract class Middleware {
-    Middleware nextMiddleware;
-    abstract boolean canRun(HttpExchange exchange);
-    Runnable handler;
+    private Middleware nextMiddleware;
+    private Runnable handler;
 
-    public Middleware setHandler(Runnable h){
+    abstract boolean canRun(HttpExchange exchange);
+
+    public Middleware setHandler(Runnable h) {
         handler = h;
         return this;
     }
-    public Middleware setAndGetNext(Middleware m){
+
+    public Middleware setAndGetNext(Middleware m) {
         nextMiddleware = m;
         return nextMiddleware;
     }
-    public void check(HttpExchange exchange){
-        if(canRun(exchange)){
-            if(nextMiddleware == null){
+
+    public void check(HttpExchange exchange) {
+        if (canRun(exchange)) {
+            if (nextMiddleware == null) {
                     handler.run();
-            }else{
+            } else {
                 nextMiddleware.setHandler(handler);
                 nextMiddleware.check(exchange);
             }
@@ -40,6 +43,7 @@ public abstract class Middleware {
     public Middleware(Runnable h) {
         setHandler(h);
     }
+
     void returnText(HttpExchange t, String text) {
 
         try {

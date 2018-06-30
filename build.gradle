@@ -26,7 +26,6 @@ repositories {
 dependencies {
     compile 'com.google.inject:guice:+'
     compile 'commons-io:commons-io:+'
-    compile 'org.slf4j:slf4j-simple:+'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
 }
 

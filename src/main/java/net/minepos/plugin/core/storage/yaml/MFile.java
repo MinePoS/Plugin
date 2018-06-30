@@ -4,14 +4,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import net.minepos.plugin.MinePoS;
 import org.apache.commons.io.FileUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2018
@@ -26,7 +26,7 @@ public final class MFile {
 
     public MFile() {
         itemMaps = new HashMap<>();
-        logger = LoggerFactory.getLogger("MFile");
+        logger = Bukkit.getLogger();
     }
 
     public void make(String name, String externalPath, String internalPath) {
@@ -42,10 +42,10 @@ public final class MFile {
 
                         logger.info(name + " successfully created & loaded.");
                     } else {
-                        logger.error(name + " creation failed.");
+                        logger.severe(name + " creation failed.");
                     }
                 } else {
-                    logger.error(name + " creation failed.");
+                    logger.severe(name + " creation failed.");
                 }
             } else {
                 insertIntoMap(name, file);
@@ -92,8 +92,4 @@ public final class MFile {
 
         return new YamlConfiguration();
     }
-
-//    public File getFile(String name) {
-//
-//    }
 }

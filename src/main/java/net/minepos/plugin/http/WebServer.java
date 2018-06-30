@@ -4,10 +4,10 @@ import com.google.inject.Inject;
 import com.sun.net.httpserver.HttpServer;
 import net.minepos.plugin.core.storage.yaml.MFile;
 import net.minepos.plugin.http.route.RunCommands;
-import org.slf4j.LoggerFactory;
+import org.bukkit.Bukkit;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.logging.Logger;
 
 /**
  * ------------------------------
@@ -17,14 +17,25 @@ import java.net.InetSocketAddress;
  * ------------------------------
  */
 public class WebServer {
-    HttpServer server;
     @Inject private MFile mFile;
 
-    public void startServer() throws IOException {
-        LoggerFactory.getLogger("MinePoS-Web").info("STARTING");
-        server = HttpServer.create(new InetSocketAddress(mFile.getFileConfiguration("http.yml").getInt("port")), 0);
-        server.createContext("/runcommand", new RunCommands());
-        server.setExecutor(null); // creates a default executor
-        server.start();
+    private Logger logger;
+
+    public WebServer() {
+        logger = Bukkit.getLogger();
+    }
+
+    public void startServer() {
+        try {
+            logger.info("STARTING");
+            logger.info(String.valueOf(mFile.getFileConfiguration("http").getInt("port")));
+
+            HttpServer server = HttpServer.create(new InetSocketAddress(mFile.getFileConfiguration("http").getInt("port")), 0);
+            server.createContext("/runcommand", new RunCommands());
+            server.setExecutor(null); // creates a default executor
+            server.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

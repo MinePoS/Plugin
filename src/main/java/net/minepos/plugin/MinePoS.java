@@ -28,18 +28,18 @@ import java.util.stream.Stream;
 public final class MinePoS extends JavaPlugin {
     @Inject private MFile mFile;
     @Inject private CommandHandler commandHandler;
-
-   // @Inject private WebServer webServer;
+    @Inject private WebServer webServer;
 
     @Inject private Test test;
 
-    CommandMap commandMap = null;
+    private CommandMap commandMap;
 
     @Override
     public void onEnable() {
         BinderModule module = new BinderModule(this);
         Injector injector = module.createInjector();
         injector.injectMembers(this);
+
         try {
             if (getServer().getPluginManager() instanceof SimplePluginManager) {
                 Field f = SimplePluginManager.class.getDeclaredField("commandMap");
@@ -50,15 +50,13 @@ public final class MinePoS extends JavaPlugin {
         } catch (Exception e){
             e.printStackTrace();
         }
+
         mFile.make("config", getDataFolder() + "/config.yml", "/config.yml");
-        mFile.make("http.yml", getDataFolder() + "/http.yml", "/http.yml");
-
-
+        mFile.make("http", getDataFolder() + "/http.yml", "/http.yml");
 
         Stream.of(
                 test
         ).forEach(commandHandler.getCommands()::add);
-
 
         List<String> baseCommandsList = mFile.getFileConfiguration("config").getStringList("base-commands");
         String[] baseCommands = baseCommandsList.toArray(new String[0]);
@@ -68,11 +66,7 @@ public final class MinePoS extends JavaPlugin {
         getCommand(baseCommands[0]).setDescription("MinePoS Base Command");
         getCommand(baseCommands[0]).setAliases(baseCommandsList);
 
-        try {
-            (new WebServer()).startServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        webServer.startServer();
         //getCommand("minepos").setExecutor(commandHandler);
     }
 
@@ -82,6 +76,7 @@ public final class MinePoS extends JavaPlugin {
         command.setAliases(Arrays.asList(aliases));
         commandMap.register(this.getDescription().getName(), command);
     }
+
     private PluginCommand getCommand(String name, Plugin plugin) {
         PluginCommand command = null;
 

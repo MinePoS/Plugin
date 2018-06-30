@@ -1,4 +1,6 @@
-package net.minepos.plugin.core.utils.strings;
+package net.minepos.plugin.core.utils.string;
+
+import org.bukkit.ChatColor;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -8,7 +10,7 @@ import java.util.stream.Collectors;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class StringUtils {
-    public boolean startsWith(String msg, String str) {
+    public static boolean startsWith(String msg, String str) {
         if (str.contains("/")) {
             String[] contain = str.toLowerCase().split("/");
             return Arrays.stream(contain).anyMatch(msg.toLowerCase()::startsWith);
@@ -17,7 +19,11 @@ public final class StringUtils {
         return msg.toLowerCase().startsWith(str.toLowerCase());
     }
 
-    public String arrayToString(String[] array, String delimiter) {
+    public static String arrayToString(String[] array, String delimiter) {
         return Arrays.stream(array).collect(Collectors.joining(delimiter));
+    }
+
+    public static String cc(String txt) {
+        return ChatColor.translateAlternateColorCodes('&', txt);
     }
 }
