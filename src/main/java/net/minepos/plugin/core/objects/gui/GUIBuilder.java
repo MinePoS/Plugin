@@ -1,5 +1,6 @@
 package net.minepos.plugin.core.objects.gui;
 
+import net.minepos.plugin.core.objects.enums.gui.GUIBuilderConstructorEnum;
 import net.minepos.plugin.core.utils.string.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,20 +26,21 @@ public final class GUIBuilder {
         this.items = new ArrayList<>();
 
         for (Object other : others) {
-            switch (other.getClass().getSimpleName().toLowerCase()) {
-                case "integer":
+            switch (GUIBuilderConstructorEnum.fromClass(other.getClass())) {
+                case INTEGER:
                     setSize((Integer) other);
                     break;
 
-                case "string":
+                case STRING:
                     setTitle((String) other);
                     break;
 
-                case "arraylist":
+                case ARRAYLIST:
                     if (other instanceof List<?>) {
                         for (Object object : (List<?>) other) {
                             if (object instanceof GUIItem) {
                                 this.items = (List<GUIItem>) other;
+                                break;
                             }
                         }
                     }

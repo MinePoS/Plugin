@@ -7,12 +7,43 @@ import org.bukkit.inventory.ItemStack;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class GUIItem {
+    private enum GUIItemEnum {
+        INTEGER(Integer.class),
+        ITEMSTACK(ItemStack.class),
+        UNKNOWN(null);
+
+        private final Class clazz;
+
+        GUIItemEnum(Class clazz) {
+            this.clazz = clazz;
+        }
+
+        public static GUIItemEnum fromClass(Class clazz) {
+            for (GUIItemEnum type : values()) {
+                if (type.clazz == clazz) {
+                    return type;
+                }
+            }
+
+            return UNKNOWN;
+        }
+    }
+
     private Integer slot;
     private ItemStack itemStack;
 
-    public GUIItem(Integer slot, ItemStack itemStack) {
-        this.slot = slot;
-        this.itemStack = itemStack;
+    public GUIItem(Object... others) {
+        for (Object other : others) {
+            switch (GUIItemEnum.fromClass(other.getClass())) {
+                case INTEGER:
+                    setSlot((Integer) other);
+                    break;
+
+                case ITEMSTACK:
+                    setItemStack((ItemStack) other);
+                    break;
+            }
+        }
     }
 
     public GUIItem setSlot(Integer slot) {
