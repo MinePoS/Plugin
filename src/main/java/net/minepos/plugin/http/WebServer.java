@@ -25,17 +25,21 @@ public class WebServer {
         logger = Bukkit.getLogger();
     }
 
-    public void startServer() {
+    public boolean startServer() {
         try {
-            logger.info("STARTING");
-            logger.info(String.valueOf(mFile.getFileConfiguration("http").getInt("port")));
-
-            HttpServer server = HttpServer.create(new InetSocketAddress(mFile.getFileConfiguration("http").getInt("port")), 0);
-            server.createContext("/runcommand", new RunCommands());
-            server.setExecutor(null); // creates a default executor
-            server.start();
+            if(mFile.getFileConfiguration("config").getBoolean("websocket.use-websocket") == false) {
+                logger.info("STARTING WEBSERVER");
+                logger.info("Webserver on port: " + String.valueOf(mFile.getFileConfiguration("http").getInt("port")));
+    
+                HttpServer server = HttpServer.create(new InetSocketAddress(mFile.getFileConfiguration("http").getInt("port")), 0);
+                server.createContext("/runcommand", new RunCommands());
+                server.setExecutor(null); // creates a default executor
+                server.start();
+                return true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return false;
     }
 }

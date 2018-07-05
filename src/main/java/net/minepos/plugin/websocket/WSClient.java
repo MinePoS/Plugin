@@ -10,6 +10,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Iterator;
 
 /**
@@ -22,10 +23,10 @@ import java.util.Iterator;
 public class WSClient extends WebSocketClient {
 	
 	@Inject private MFile mFile;
-	JSONParser jsonParser = new JSONParser();
+	private JSONParser jsonParser = new JSONParser();
 	
-	public WSClient(URI serverUri) {
-		super(serverUri);
+	public WSClient(String serverUri) throws URISyntaxException {
+		super(new URI(serverUri));
 	}
 	
 	@Override
@@ -121,12 +122,14 @@ public class WSClient extends WebSocketClient {
 			response.put("type", "donation");
 			response.put("state", 0);
 			response.put("message", "No commands sent");
+			send(response.toJSONString());
 			return;
 		}
 		if(!(outer.get("commands") instanceof JSONArray)) {
 			response.put("type", "donation");
 			response.put("state", 0);
 			response.put("message", "Commands object not an array");
+			send(response.toJSONString());
 			return;
 		}
 		JSONArray commands = (JSONArray) outer.get("commands");

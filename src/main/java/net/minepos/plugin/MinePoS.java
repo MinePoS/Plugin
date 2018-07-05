@@ -7,6 +7,8 @@ import net.minepos.plugin.core.framework.BinderModule;
 import net.minepos.plugin.core.handlers.CommandHandler;
 import net.minepos.plugin.core.storage.yaml.MFile;
 import net.minepos.plugin.http.WebServer;
+import net.minepos.plugin.websocket.WSClient;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -29,6 +32,7 @@ public final class MinePoS extends JavaPlugin {
     @Inject private MFile mFile;
     @Inject private CommandHandler commandHandler;
     @Inject private WebServer webServer;
+    @Inject private WSClient webSocketClient;
 
     @Inject private Test test;
 
@@ -66,7 +70,15 @@ public final class MinePoS extends JavaPlugin {
         getCommand(baseCommands[0]).setDescription("MinePoS Base Command");
         getCommand(baseCommands[0]).setAliases(baseCommandsList);
 
-        webServer.startServer();
+        if(!webServer.startServer()) {
+            try {
+                Bukkit.getLogger().info("Using websocket communications");
+                webSocketClient = new WSClient(mFile.getFileConfiguration("config").getString("websocket.websocket-url"));
+                webSocketClient.connect();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
         //getCommand("minepos").setExecutor(commandHandler);
     }
 
