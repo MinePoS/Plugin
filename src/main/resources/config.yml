@@ -2,6 +2,7 @@ base-commands:
   - minepos
   - buy
 API-KEY: 123
+server-name: server
 commands:
   test:
     command: "oof"
