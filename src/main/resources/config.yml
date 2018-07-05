@@ -2,6 +2,10 @@ base-commands:
   - minepos
   - buy
 API-KEY: 123
+server-name: server
 commands:
   test:
     command: "oof"
+websocket:
+  use-websocket: false
+  websocket-url: ws://127.0.0.1:8392
