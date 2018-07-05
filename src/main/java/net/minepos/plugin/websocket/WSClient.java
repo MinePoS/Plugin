@@ -2,13 +2,23 @@ package net.minepos.plugin.websocket;
 
 import com.google.inject.Inject;
 import net.minepos.plugin.core.storage.yaml.MFile;
+import org.bukkit.Bukkit;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import java.net.URI;
+import java.util.Iterator;
 
+/**
+ * ------------------------------
+ * Copyright (c) ThatGamerBlue 2018
+ * https://www.thatgamerblue.com
+ * Project: MinePoS
+ * ------------------------------
+ */
 public class WSClient extends WebSocketClient {
 	
 	@Inject private MFile mFile;
@@ -106,7 +116,31 @@ public class WSClient extends WebSocketClient {
 	}
 	
 	private void handleDonation(JSONObject outer) {
-	
+		JSONObject response = new JSONObject();
+		if(!outer.containsKey("commands")) {
+			response.put("type", "donation");
+			response.put("state", 0);
+			response.put("message", "No commands sent");
+			return;
+		}
+		if(!(outer.get("commands") instanceof JSONArray)) {
+			response.put("type", "donation");
+			response.put("state", 0);
+			response.put("message", "Commands object not an array");
+			return;
+		}
+		JSONArray commands = (JSONArray) outer.get("commands");
+		Iterator iter = commands.iterator();
+		while(iter.hasNext()) {
+			Object obj = iter.next();
+			if(!(obj instanceof String)) {
+				continue;
+			}
+			Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), (String) obj);
+		}
+		response.put("type", "donation");
+		response.put("state", 1);
+		send(response.toJSONString());
 	}
 	
 }
