@@ -25,7 +25,7 @@ public final class CommandHandler implements CommandExecutor {
     private List<Command> commandsList;
 
     public CommandHandler() {
-        this.commandsList = new ArrayList<>();
+        commandsList = new ArrayList<>();
     }
 
     public List<Command> getCommands() {
