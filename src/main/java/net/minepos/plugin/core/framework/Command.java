@@ -18,10 +18,10 @@ public abstract class Command {
         this.command = command;
     }
 
-    protected abstract void execute(CommandSender sender, String[] args);
+    protected abstract boolean execute(CommandSender sender, String[] args);
 
-    public void run(CommandSender sender, String[] args) {
-        execute(sender, args);
+    public boolean run(CommandSender sender, String[] args) {
+        return execute(sender, args);
     }
 
     public CommandsEnum getCommand() {

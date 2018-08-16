@@ -1,10 +1,12 @@
 package net.minepos.plugin.commands;
 
+import com.google.inject.Inject;
 import net.minepos.plugin.core.framework.Command;
 import net.minepos.plugin.core.objects.enums.CommandsEnum;
 import net.minepos.plugin.core.objects.gui.GUIBuilder;
 import net.minepos.plugin.core.objects.gui.GUIItemBuilder;
 import net.minepos.plugin.core.objects.gui.GUIItemMaterial;
+import net.minepos.plugin.core.storage.yaml.Lang;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,12 +20,14 @@ import java.util.stream.Stream;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class Test extends Command {
+    @Inject private Lang lang;
+
     public Test() {
         super(CommandsEnum.TEST);
     }
 
     @Override
-    protected void execute(CommandSender sender, String[] args) {
+    protected boolean execute(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
             List<String> desc = new ArrayList<>();
             Stream.of("&bmega oof", "&coof").forEach(desc::add);
@@ -42,6 +46,10 @@ public final class Test extends Command {
                         .addItems(guiItemBuilder.getGuiItem())
                         .build();
             }
+        } else {
+            sender.sendMessage(lang.get("ingame.player-only"));
         }
+
+        return true;
     }
 }

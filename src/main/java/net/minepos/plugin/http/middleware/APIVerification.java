@@ -2,9 +2,8 @@ package net.minepos.plugin.http.middleware;
 
 import com.google.inject.Inject;
 import com.sun.net.httpserver.HttpExchange;
+import net.minepos.plugin.core.storage.yaml.Lang;
 import net.minepos.plugin.core.storage.yaml.MFile;
-
-import java.io.IOException;
 
 /**
  * ------------------------------
@@ -13,22 +12,24 @@ import java.io.IOException;
  * Project: MinePoS
  * ------------------------------
  */
-public class APIVerification extends Middleware{
+public class APIVerification extends Middleware {
     @Inject private MFile mFile;
+    @Inject private Lang lang;
 
     @Override
-    boolean canRun(HttpExchange httpExchange){
-        if(httpExchange.getRequestHeaders().containsKey("MINEPOS_AUTH")){
+    boolean canRun(HttpExchange httpExchange) {
+        if(httpExchange.getRequestHeaders().containsKey("MINEPOS_AUTH")) {
             String token = mFile.getFileConfiguration("config.yml").getString("API-KEY");
             String tokenGiven = httpExchange.getRequestHeaders().get("MINEPOS_AUTH").get(0);
-            if(tokenGiven.equalsIgnoreCase(token)){
+
+            if(tokenGiven.equalsIgnoreCase(token)) {
                 return true;
-            }else{
-                returnText(httpExchange, "The MinePoS API-KEY was not valid");
+            } else {
+                returnText(httpExchange, lang.get("webserver.invalid-token"));
                 return false;
             }
-        }else{
-            returnText(httpExchange, "No MinePoS API-KEY was provided");
+        } else {
+            returnText(httpExchange, lang.get("webserver.no-token"));
            return false;
         }
     }

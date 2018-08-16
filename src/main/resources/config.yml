@@ -1,7 +1,9 @@
-base-commands:
-  - minepos
-  - buy
+http:
+  enabled: true
+  port: 8391
 API-KEY: 123
 commands:
-  test:
-    command: "oof"
+  base-commands:
+  - minepos
+  - buy
+  base-command-description: "MinePoS Base Command"

@@ -2,6 +2,7 @@ package net.minepos.plugin.http;
 
 import com.google.inject.Inject;
 import com.sun.net.httpserver.HttpServer;
+import net.minepos.plugin.core.storage.yaml.Lang;
 import net.minepos.plugin.core.storage.yaml.MFile;
 import net.minepos.plugin.http.route.RunCommands;
 import org.bukkit.Bukkit;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
  */
 public class WebServer {
     @Inject private MFile mFile;
+    @Inject private Lang lang;
 
     private Logger logger;
 
@@ -27,10 +29,12 @@ public class WebServer {
 
     public void startServer() {
         try {
-            logger.info("STARTING");
-            logger.info(String.valueOf(mFile.getFileConfiguration("http").getInt("port")));
+            int port = mFile.getFileConfiguration("config").getInt("http.port", 8391);
 
-            HttpServer server = HttpServer.create(new InetSocketAddress(mFile.getFileConfiguration("http").getInt("port")), 0);
+            logger.info(lang.get("webserver.start-message"));
+            logger.info(String.valueOf(port));
+
+            HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
             server.createContext("/runcommand", new RunCommands());
             server.setExecutor(null); // creates a default executor
             server.start();

@@ -29,6 +29,10 @@ public final class MFile {
         logger = Bukkit.getLogger();
     }
 
+    public Map<String, Map<String, Object>> getItemMaps() {
+        return itemMaps;
+    }
+
     public void make(String name, String externalPath, String internalPath) {
         File file = new File(externalPath);
 
@@ -62,6 +66,7 @@ public final class MFile {
     }
 
     private void insertIntoMap(String name, File file) {
+        // We need to populate the map in-case the file isn't yaml.
         Map<String, Object> tempMap = new HashMap<>();
         itemMaps.put(name, tempMap);
 
@@ -91,5 +96,17 @@ public final class MFile {
         }
 
         return new YamlConfiguration();
+    }
+
+    public void save(String name) {
+        try {
+            Object file = itemMaps.get(name).get("file");
+
+            if (file instanceof File) {
+                getFileConfiguration(name).save((File) file);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
