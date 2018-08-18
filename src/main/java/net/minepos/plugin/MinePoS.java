@@ -11,6 +11,7 @@ import net.minepos.plugin.core.handlers.CommandHandler;
 import net.minepos.plugin.core.objects.enums.Registerables;
 import net.minepos.plugin.core.storage.yaml.MFile;
 import net.minepos.plugin.http.WebServer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.stream.Stream;
@@ -50,6 +51,16 @@ public final class MinePoS extends JavaPlugin {
             case FILES:
                 mFile.make("config", getDataFolder() + "/config.yml", "/config.yml");
                 mFile.make("lang", getDataFolder() + "/lang.yml", "/lang.yml");
+
+                final FileConfiguration config = mFile.getFileConfiguration("config");
+
+                mFile.make("gui/main", getDataFolder() + "/" + config.getString("guis.main"), "/gui/main.yml");
+
+                config.getStringList("guis.other").forEach(i -> mFile.make(
+                        (i.startsWith("gui/") ? "" : "gui/") + i.toLowerCase().replace(".yml", ""),
+                        getDataFolder() + i,
+                        ""
+                ));
 
                 break;
 

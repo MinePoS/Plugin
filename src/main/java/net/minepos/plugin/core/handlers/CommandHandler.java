@@ -42,7 +42,7 @@ public final class CommandHandler implements CommandExecutor {
                 String name = commands.getCommand(cmdEnum);
                 String permission = commands.getPermission(cmdEnum);
                 String usage = commands.getUsage(cmdEnum);
-                String[] args = msg.toLowerCase().replace(name.toLowerCase(), "").trim().split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+                String[] args = msg.toLowerCase().replaceFirst(name.toLowerCase(), "").trim().split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
                 if (StringUtils.startsWith(msg, name)) {
                     if (sender.hasPermission(permission)) {

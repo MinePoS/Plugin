@@ -95,7 +95,7 @@ public final class GUIItemBuilder {
         return this;
     }
 
-    public GUIItemBuilder build() {
+    public GUIItem build() {
         if (slot != null) {
             if (itemStack != null) {
                 if (itemMeta != null) {
@@ -128,10 +128,6 @@ public final class GUIItemBuilder {
             }
         }
 
-        return this;
-    }
-
-    public GUIItem getGuiItem() {
         return guiItem;
     }
 }

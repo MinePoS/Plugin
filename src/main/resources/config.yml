@@ -2,6 +2,9 @@ http:
   enabled: true
   port: 8391
 API-KEY: 123
+guis:
+  main: "gui/main.yml"
+  other:
 commands:
   base-commands:
   - minepos

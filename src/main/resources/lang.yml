@@ -10,6 +10,9 @@ ingame:
     - "&c/minepos help &8- &7This help menu."
     - "&c/minepos test &8- &7GUI testing the gui builder"
     - "&7---------------------------"
+
+  test:
+    unknown-gui: "&c%s &7is not a valid gui."
 webserver:
   start-message: "WebServer starting up"
   invalid-token: "The api key you've provided is invalid"

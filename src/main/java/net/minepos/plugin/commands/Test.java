@@ -3,16 +3,16 @@ package net.minepos.plugin.commands;
 import com.google.inject.Inject;
 import net.minepos.plugin.core.framework.Command;
 import net.minepos.plugin.core.objects.enums.CommandsEnum;
-import net.minepos.plugin.core.objects.gui.GUIBuilder;
-import net.minepos.plugin.core.objects.gui.GUIItemBuilder;
-import net.minepos.plugin.core.objects.gui.GUIItemMaterial;
+import net.minepos.plugin.core.objects.gui.*;
 import net.minepos.plugin.core.storage.yaml.Lang;
+import net.minepos.plugin.core.storage.yaml.MFile;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 // ------------------------------
@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class Test extends Command {
+    @Inject private MFile mFile;
     @Inject private Lang lang;
 
     public Test() {
@@ -29,22 +30,26 @@ public final class Test extends Command {
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
-            List<String> desc = new ArrayList<>();
-            Stream.of("&bmega oof", "&coof").forEach(desc::add);
+            Map<String, FileConfiguration> configs = new HashMap<>();
+            Player player = (Player) sender;
 
-            GUIItemBuilder guiItemBuilder = new GUIItemBuilder()
-                    .setGuiItemMaterial(new GUIItemMaterial(Material.ANVIL, 1))
-                    .setSlot(4)
-                    .setDescription(desc)
-                    .setDisplayName("ooooofff")
-                    .build();
+            mFile.getItemMaps().keySet().forEach(n -> {
+                if (n.toLowerCase().startsWith("gui/")) {
+                    configs.put(n.replace("gui/", ""), mFile.getFileConfiguration(n));
+                }
+            });
 
-            if (guiItemBuilder != null) {
-                new GUIBuilder((Player) sender)
-                        .setSize(9)
-                        .setTitle("gui")
-                        .addItems(guiItemBuilder.getGuiItem())
-                        .build();
+            if (args.length == 0 || configs.isEmpty()) {
+                ConfigGUIParser.parseGUI(mFile.getFileConfiguration("gui/main"), player).build();
+                return true;
+            }
+
+            FileConfiguration config = configs.get(args[0]);
+
+            if (config != null) {
+                ConfigGUIParser.parseGUI(config, player).build();
+            } else {
+                player.sendMessage(lang.get("ingame.test.unknown-gui", args[0]));
             }
         } else {
             sender.sendMessage(lang.get("ingame.player-only"));
