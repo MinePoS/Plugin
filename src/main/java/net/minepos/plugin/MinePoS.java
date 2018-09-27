@@ -9,6 +9,7 @@ import net.minepos.plugin.core.framework.BinderModule;
 import net.minepos.plugin.core.handlers.BaseCommandHandler;
 import net.minepos.plugin.core.handlers.CommandHandler;
 import net.minepos.plugin.core.objects.enums.Registerables;
+import net.minepos.plugin.core.objects.gui.ConfigGUIParser;
 import net.minepos.plugin.core.storage.yaml.MFile;
 import net.minepos.plugin.http.WebServer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,7 +36,7 @@ public final class MinePoS extends JavaPlugin {
     @Override
     public void onEnable() {
         Stream.of(
-                GUICE, FILES, COMMANDS, WEBSERVER
+                GUICE, FILES, COMMANDS, WEBSERVER, GUI
         ).forEach(this::register);
     }
 
@@ -69,7 +70,7 @@ public final class MinePoS extends JavaPlugin {
 
                 Stream.of(
                         test, help
-                ).forEach(commandHandler.getCommands()::add);
+                ).forEach(commandHandler.getCommandsList()::add);
 
                 break;
 
@@ -77,6 +78,15 @@ public final class MinePoS extends JavaPlugin {
                 if (mFile.getFileConfiguration("config").getBoolean("http.enabled", true)) {
                     webServer.startServer();
                 }
+
+                break;
+
+            case GUI:
+                mFile.getItemMaps().keySet().forEach(key -> {
+                    if (key.startsWith("gui/")) {
+                        ConfigGUIParser.parseGUI(mFile.getFileConfiguration(key), key.replaceFirst("gui/", ""));
+                    }
+                });
 
                 break;
         }

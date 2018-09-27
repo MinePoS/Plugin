@@ -36,7 +36,7 @@ public class WebServer {
 
             HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
             server.createContext("/runcommand", new RunCommands());
-            server.setExecutor(null); // creates a default executor
+            server.setExecutor(null);
             server.start();
         } catch (Exception e) {
             e.printStackTrace();

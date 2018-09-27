@@ -2,6 +2,7 @@ package net.minepos.plugin.core.storage.yaml;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import lombok.Getter;
 import net.minepos.plugin.MinePoS;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
@@ -21,16 +22,12 @@ import java.util.logging.Logger;
 public final class MFile {
     @Inject private net.minepos.plugin.core.utils.file.FileUtils fileUtils;
 
-    private Map<String, Map<String, Object>> itemMaps;
+    @Getter private Map<String, Map<String, Object>> itemMaps;
     private Logger logger;
 
     public MFile() {
         itemMaps = new HashMap<>();
         logger = Bukkit.getLogger();
-    }
-
-    public Map<String, Map<String, Object>> getItemMaps() {
-        return itemMaps;
     }
 
     public void make(String name, String externalPath, String internalPath) {
@@ -66,9 +63,7 @@ public final class MFile {
     }
 
     private void insertIntoMap(String name, File file) {
-        // We need to populate the map in-case the file isn't yaml.
-        Map<String, Object> tempMap = new HashMap<>();
-        itemMaps.put(name, tempMap);
+        Map<String, Object> itemMap = new HashMap<>();
 
         try {
             String fileContent = FileUtils.readFileToString(file, "UTF-8");
@@ -77,15 +72,16 @@ public final class MFile {
                 FileConfiguration fileConfiguration = new YamlConfiguration();
                 fileConfiguration.load(file);
 
-                itemMaps.get(name).put("file-configuration", fileConfiguration);
+                itemMap.put("file-configuration", fileConfiguration);
             } else {
-                itemMaps.get(name).put("file-content", fileContent);
+                itemMap.put("file-content", fileContent);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        itemMaps.get(name).put("file", file);
+        itemMap.put("file", file);
+        itemMaps.put(name, itemMap);
     }
 
     public FileConfiguration getFileConfiguration(String name) {

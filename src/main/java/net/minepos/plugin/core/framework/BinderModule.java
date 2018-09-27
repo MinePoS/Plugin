@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import net.minepos.plugin.MinePoS;
+import net.minepos.plugin.core.objects.gui.ConfigGUIParser;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2018
@@ -23,5 +24,6 @@ public final class BinderModule extends AbstractModule {
     @Override
     public void configure() {
         this.bind(MinePoS.class).toInstance(plugin);
+        requestStaticInjection(ConfigGUIParser.class);
     }
 }

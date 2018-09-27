@@ -1,19 +1,49 @@
 package net.minepos.plugin.core.objects.gui;
 
 
-import net.minepos.plugin.core.objects.enums.gui.GUIItemBuilderConstructorEnum;
 import net.minepos.plugin.core.utils.string.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.SkullType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2018
 // https://www.piggypiglet.me
 // ------------------------------
 public final class GUIItemBuilder {
+    private enum ConstructorEnum {
+        INTEGER(Integer.class),
+        ITEMSTACK(ItemStack.class),
+        ITEMMETA(ItemMeta.class),
+        GUIITEMMATERIAL(GUIItemMaterial.class),
+        STRING(String.class),
+        ARRAYLIST(ArrayList.class),
+        UUID(UUID.class),
+        UNKNOWN(null);
+
+        private final Class clazz;
+
+        ConstructorEnum(Class clazz) {
+            this.clazz = clazz;
+        }
+
+        public static ConstructorEnum fromClass(Class clazz) {
+            for (ConstructorEnum type : values()) {
+                if (type.clazz == clazz) {
+                    return type;
+                }
+            }
+
+            return UNKNOWN;
+        }
+    }
+
     private GUIItem guiItem;
     private Integer slot;
     private ItemStack itemStack;
@@ -21,13 +51,14 @@ public final class GUIItemBuilder {
     private GUIItemMaterial guiItemMaterial;
     private String displayName;
     private List<String> description;
+    private UUID skullOwner;
 
     @SuppressWarnings("unchecked")
     public GUIItemBuilder(Object... others) {
         description = new ArrayList<>();
 
         for (Object other : others) {
-            switch (GUIItemBuilderConstructorEnum.fromClass(other.getClass())) {
+            switch (ConstructorEnum.fromClass(other.getClass())) {
                 case INTEGER:
                     setSlot((Integer) other);
                     break;
@@ -88,10 +119,12 @@ public final class GUIItemBuilder {
     }
 
     public GUIItemBuilder setDescription(List<String> description) {
-        List<String> newDesc = new ArrayList<>();
-        description.forEach(str -> newDesc.add(StringUtils.cc("&r" + str)));
+        this.description = StringUtils.cc(description);
+        return this;
+    }
 
-        this.description = newDesc;
+    public GUIItemBuilder setSkullOwner(UUID skullOwner) {
+        this.skullOwner = skullOwner;
         return this;
     }
 
@@ -106,7 +139,13 @@ public final class GUIItemBuilder {
             } else {
                 if (guiItemMaterial == null) return null;
 
-                ItemStack itemStack = new ItemStack(guiItemMaterial.getMaterial(), guiItemMaterial.getAmount());
+                ItemStack itemStack;
+                if (skullOwner == null) {
+                    itemStack = new ItemStack(guiItemMaterial.getMaterial(), guiItemMaterial.getAmount());
+                } else {
+                    itemStack = new ItemStack(guiItemMaterial.getMaterial(), guiItemMaterial.getAmount(), (byte) SkullType.PLAYER.ordinal());
+                }
+
                 ItemMeta itemMeta = itemStack.getItemMeta();
 
                 if (this.itemMeta != null) {
@@ -121,6 +160,10 @@ public final class GUIItemBuilder {
 
                 if (description != null) {
                     itemMeta.setLore(description);
+                }
+
+                if (skullOwner != null && itemMeta instanceof SkullMeta) {
+                    ((SkullMeta) itemMeta).setOwningPlayer(Bukkit.getOfflinePlayer(skullOwner));
                 }
 
                 itemStack.setItemMeta(itemMeta);

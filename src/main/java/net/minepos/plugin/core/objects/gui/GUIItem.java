@@ -1,5 +1,6 @@
 package net.minepos.plugin.core.objects.gui;
 
+import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 
 // ------------------------------
@@ -29,8 +30,8 @@ public final class GUIItem {
         }
     }
 
-    private Integer slot;
-    private ItemStack itemStack;
+    @Getter private Integer slot;
+    @Getter private ItemStack itemStack;
 
     public GUIItem(Object... others) {
         for (Object other : others) {
@@ -54,13 +55,5 @@ public final class GUIItem {
     public GUIItem setItemStack(ItemStack itemStack) {
         this.itemStack = itemStack;
         return this;
-    }
-
-    public Integer getSlot() {
-        return slot;
-    }
-
-    public ItemStack getItemStack() {
-        return itemStack;
     }
 }

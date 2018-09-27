@@ -3,7 +3,6 @@ package net.minepos.plugin.core.storage.yaml;
 import com.google.inject.Inject;
 import net.minepos.plugin.core.utils.string.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 // ------------------------------
@@ -18,9 +17,6 @@ public final class Lang {
     }
 
     public List<String> getList(String item, Object... placeholders) {
-        List<String> list = new ArrayList<>();
-        mFile.getFileConfiguration("lang").getStringList(item).stream().map(StringUtils::cc).forEach(str -> list.add(String.format(str, placeholders)));
-
-        return list;
+        return StringUtils.format(mFile.getFileConfiguration("lang").getStringList(item), placeholders);
     }
 }

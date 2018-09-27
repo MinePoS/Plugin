@@ -8,5 +8,6 @@ public enum Registerables {
     GUICE,
     FILES,
     COMMANDS,
-    WEBSERVER
+    WEBSERVER,
+    GUI
 }

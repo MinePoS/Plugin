@@ -1,9 +1,8 @@
 package net.minepos.plugin.core.objects.gui;
 
-import net.minepos.plugin.core.objects.enums.gui.GUIBuilderConstructorEnum;
+import lombok.Getter;
 import net.minepos.plugin.core.utils.string.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
@@ -15,18 +14,39 @@ import java.util.List;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class GUIBuilder {
-    private Player player;
+    private enum ConstructorEnum {
+        INTEGER(Integer.class),
+        STRING(String.class),
+        ARRAYLIST(ArrayList.class),
+        UNKNOWN(null);
+
+        private final Class clazz;
+
+        ConstructorEnum(Class clazz) {
+            this.clazz = clazz;
+        }
+
+        public static ConstructorEnum fromClass(Class clazz) {
+            for (ConstructorEnum type : values()) {
+                if (type.clazz == clazz) {
+                    return type;
+                }
+            }
+
+            return UNKNOWN;
+        }
+    }
+
     private Integer size;
     private String title;
     private List<GUIItem> items;
 
     @SuppressWarnings("unchecked")
-    public GUIBuilder(Player player, Object... others) {
-        this.player = player;
+    public GUIBuilder(Object... others) {
         this.items = new ArrayList<>();
 
         for (Object other : others) {
-            switch (GUIBuilderConstructorEnum.fromClass(other.getClass())) {
+            switch (ConstructorEnum.fromClass(other.getClass())) {
                 case INTEGER:
                     setSize((Integer) other);
                     break;
@@ -64,13 +84,27 @@ public final class GUIBuilder {
         return this;
     }
 
-    public void build() {
+    public GUI build() {
         Inventory inventory = Bukkit.createInventory(null, size, title);
 
         for (GUIItem item : items) {
             inventory.setItem(item.getSlot(), item.getItemStack());
         }
 
-        player.openInventory(inventory);
+        return new GUI(inventory, this);
+    }
+
+    public final class GUI {
+        @Getter private final Inventory inventory;
+        @Getter private final GUIBuilder builder;
+
+        private GUI() throws InstantiationException {
+            throw new InstantiationException("This class cannot be instantiated");
+        }
+
+        public GUI(Inventory inventory, GUIBuilder builder) {
+            this.inventory = inventory;
+            this.builder = builder;
+        }
     }
 }
