@@ -46,5 +46,5 @@ shadowJar {
     exclude 'META-INF/*.SF'
     exclude 'META-INF/*.DSA'
     exclude 'META-INF/*.RSA'
-    destinationDir = file("$rootDir/spigot/plugins")
+    destinationDir = file("./spigot/plugins")
 }

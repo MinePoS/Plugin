@@ -4,6 +4,11 @@ import com.google.inject.Inject;
 import com.sun.net.httpserver.HttpExchange;
 import net.minepos.plugin.core.storage.yaml.Lang;
 import net.minepos.plugin.core.storage.yaml.MFile;
+import org.bukkit.Bukkit;
+import org.bukkit.event.server.ServerListPingEvent;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ------------------------------
@@ -23,13 +28,16 @@ public class APIVerification extends Middleware {
             String tokenGiven = httpExchange.getRequestHeaders().get("MINEPOS_AUTH").get(0);
 
             if(tokenGiven.equalsIgnoreCase(token)) {
+                Bukkit.getLogger().info("Token Matched");
                 return true;
             } else {
                 returnText(httpExchange, lang.get("webserver.invalid-token"));
+                Bukkit.getLogger().info("bad token");
                 return false;
             }
         } else {
             returnText(httpExchange, lang.get("webserver.no-token"));
+            Bukkit.getLogger().info("no token");
            return false;
         }
     }

@@ -91,4 +91,9 @@ public final class MinePoS extends JavaPlugin {
                 break;
         }
     }
+
+    @Override
+    public void onDisable() {
+        webServer.stopServer();
+    }
 }

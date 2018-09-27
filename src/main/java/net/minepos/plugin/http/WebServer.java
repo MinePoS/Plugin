@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class WebServer {
     @Inject private MFile mFile;
     @Inject private Lang lang;
-
+    HttpServer server;
     private Logger logger;
 
     public WebServer() {
@@ -32,14 +32,17 @@ public class WebServer {
             int port = mFile.getFileConfiguration("config").getInt("http.port", 8391);
 
             logger.info(lang.get("webserver.start-message"));
-            logger.info(String.valueOf(port));
 
-            HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+            server = HttpServer.create(new InetSocketAddress(port), 0);
             server.createContext("/runcommand", new RunCommands());
             server.setExecutor(null);
             server.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void stopServer(){
+       // server.stop(0);
     }
 }

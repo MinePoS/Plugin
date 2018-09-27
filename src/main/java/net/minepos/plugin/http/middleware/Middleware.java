@@ -2,6 +2,7 @@ package net.minepos.plugin.http.middleware;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.bukkit.Bukkit;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,6 +31,7 @@ public abstract class Middleware {
     }
 
     public void check(HttpExchange exchange) {
+        Bukkit.getLogger().info("Checking!");
         if (canRun(exchange)) {
             if (nextMiddleware == null) {
                     handler.run();
