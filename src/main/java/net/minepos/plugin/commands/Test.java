@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class Test extends Command {
-    @Inject private MFile mFile;
     @Inject private Lang lang;
     @Inject private GUIHandler guiHandler;
 

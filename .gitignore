@@ -3,3 +3,4 @@ build/
 spigot/
 .gradle/
 out/
+ssh

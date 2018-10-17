@@ -12,7 +12,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2018
@@ -23,25 +24,34 @@ public final class CommandHandler implements CommandExecutor {
     @Inject private Commands commands;
     @Inject private Lang lang;
 
-    @Getter private List<Command> commandsList;
+    @Getter private Map<CommandsEnum, Command> commandsMap;
 
     public CommandHandler() {
-        commandsList = new ArrayList<>();
+        commandsMap = new HashMap<>();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] badArgs) {
         if (badArgs.length >= 1) {
             String msg = String.join(" ", badArgs);
+            CommandsEnum cmdEnum;
 
-            for (Command cmd : commandsList) {
-                CommandsEnum cmdEnum = cmd.getCommand();
-                String name = commands.getCommand(cmdEnum);
-                String permission = commands.getPermission(cmdEnum);
-                String usage = commands.getUsage(cmdEnum);
-                String[] args = msg.toLowerCase().replaceFirst(name.toLowerCase(), "").trim().split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+            try {
+                cmdEnum = CommandsEnum.valueOf(badArgs[0].toUpperCase());
+            } catch (Exception e) {
+                sender.sendMessage(lang.get("ingame.unknown-command", msg));
+                return true;
+            }
 
+            String name = commands.getCommand(cmdEnum);
+
+            if (commandsMap.containsKey(cmdEnum)) {
                 if (StringUtils.startsWith(msg, name)) {
+                    Command cmd = commandsMap.get(cmdEnum);
+                    String permission = commands.getPermission(cmdEnum);
+                    String usage = commands.getUsage(cmdEnum);
+                    String[] args = msg.toLowerCase().replaceFirst(name.toLowerCase(), "").trim().split("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+
                     if (sender.hasPermission(permission)) {
                         boolean run = cmd.run(sender, args[0].isEmpty() ? new String[]{} : args);
 
@@ -55,12 +65,10 @@ public final class CommandHandler implements CommandExecutor {
             }
 
             sender.sendMessage(lang.get("ingame.unknown-command", msg));
-
             return true;
         }
 
         sender.sendMessage(lang.get("ingame.no-arguments-supplied"));
-
         return true;
     }
 }

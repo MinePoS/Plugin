@@ -1,12 +1,11 @@
 package net.minepos.plugin.core.handlers;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import net.minepos.plugin.MinePoS;
-import net.minepos.plugin.core.framework.Command;
 import net.minepos.plugin.core.objects.CommandNotification;
 import net.minepos.plugin.core.storage.yaml.MFile;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -20,18 +19,12 @@ import java.util.UUID;
  * Project: MinePoS-Plugin
  * ------------------------------
  */
-public class CommandQueueHandler {
-
-    @Inject
-    private MFile mFile;
-
-    private static CommandQueueHandler ourInstance = new CommandQueueHandler();
-
-    public static CommandQueueHandler getInstance() {
-        return ourInstance;
-    }
+@Singleton
+public final class CommandQueueHandler {
+    @Inject private MFile mFile;
 
     public static Map<CommandNotification, UUID> commandMap;
+
     private JavaPlugin plugin;
 
     private CommandQueueHandler() {

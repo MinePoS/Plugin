@@ -15,7 +15,7 @@ public final class CommandNotification extends BukkitRunnable {
     @Getter private final UUID uuid;
     @Getter private final String command;
     @Getter private final String queueid;
-    //fetch uuid on minepos from mojang
+
     public CommandNotification(UUID uuid, String queueid,String command) {
         this.uuid = uuid;
         this.command = command;

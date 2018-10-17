@@ -8,10 +8,12 @@ import net.minepos.plugin.commands.Test;
 import net.minepos.plugin.core.framework.BinderModule;
 import net.minepos.plugin.core.handlers.BaseCommandHandler;
 import net.minepos.plugin.core.handlers.CommandHandler;
+import net.minepos.plugin.core.handlers.HTTPHandler;
 import net.minepos.plugin.core.objects.enums.Registerables;
 import net.minepos.plugin.core.objects.gui.ConfigGUIParser;
 import net.minepos.plugin.core.storage.yaml.MFile;
 import net.minepos.plugin.http.WebServer;
+import net.minepos.plugin.http.commands.RunCommands;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,10 +30,12 @@ public final class MinePoS extends JavaPlugin {
     @Inject private MFile mFile;
     @Inject private CommandHandler commandHandler;
     @Inject private BaseCommandHandler baseCommandHandler;
-    @Inject private WebServer webServer;
+    @Inject private HTTPHandler httpHandler;
 
     @Inject private Test test;
     @Inject private Help help;
+
+    @Inject private RunCommands runCommands;
 
     @Override
     public void onEnable() {
@@ -70,14 +74,20 @@ public final class MinePoS extends JavaPlugin {
 
                 Stream.of(
                         test, help
-                ).forEach(commandHandler.getCommandsList()::add);
+                ).forEach(e -> commandHandler.getCommandsMap().put(e.getCommand(), e));
 
                 break;
 
             case WEBSERVER:
-                if (mFile.getFileConfiguration("config").getBoolean("http.enabled", true)) {
-                    webServer.startServer();
+                FileConfiguration config_ = mFile.getFileConfiguration("config");
+
+                if (config_.getBoolean("http.enabled", true)) {
+                    new WebServer(config_.getInt("http.port"), httpHandler);
                 }
+
+                Stream.of(
+                        runCommands
+                ).forEach(httpHandler.getActions()::add);
 
                 break;
 
@@ -90,10 +100,5 @@ public final class MinePoS extends JavaPlugin {
 
                 break;
         }
-    }
-
-    @Override
-    public void onDisable() {
-        webServer.stopServer();
     }
 }

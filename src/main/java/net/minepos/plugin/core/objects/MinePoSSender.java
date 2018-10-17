@@ -21,19 +21,21 @@ import java.util.Set;
  * Project: MinePoS-Plugin
  * ------------------------------
  */
+
+// todo: redo this fucking class
 public class MinePoSSender implements ConsoleCommandSender {
-
-
     private boolean showExtra;
-    private String CommandQueueID;
+    private String commandQueueID;
 
     public MinePoSSender(){
         showExtra = false;
     }
+
     public  MinePoSSender(String id){
-        showExtra= true;
-        CommandQueueID = id;
+        showExtra = true;
+        commandQueueID = id;
     }
+
     public boolean isOp() {
         return true;
     }
@@ -60,9 +62,11 @@ public class MinePoSSender implements ConsoleCommandSender {
     @Override
     public String getName() {
         String temp = "MinePoS";
+
         if(showExtra){
-            temp = temp + "-Queue-"+CommandQueueID;
+            temp = temp + "-Queue-" + commandQueueID;
         }
+
         return temp;
     }
 

@@ -1,5 +1,6 @@
 package net.minepos.plugin.core.framework;
 
+import lombok.Getter;
 import net.minepos.plugin.core.objects.enums.CommandsEnum;
 import org.bukkit.command.CommandSender;
 
@@ -8,7 +9,7 @@ import org.bukkit.command.CommandSender;
 // https://www.piggypiglet.me
 // ------------------------------
 public abstract class Command {
-    private final CommandsEnum command;
+    @Getter private final CommandsEnum command;
 
     protected Command() {
         this(null);
@@ -22,9 +23,5 @@ public abstract class Command {
 
     public boolean run(CommandSender sender, String[] args) {
         return execute(sender, args);
-    }
-
-    public CommandsEnum getCommand() {
-        return command;
     }
 }

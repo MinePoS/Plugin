@@ -25,6 +25,8 @@ repositories {
 dependencies {
     compile 'com.google.inject:guice:+'
     compile 'commons-io:commons-io:+'
+    compile 'org.nanohttpd:nanohttpd:+'
+    compile 'org.bouncycastle:bcprov-jdk15on:+'
     compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
 }
 
