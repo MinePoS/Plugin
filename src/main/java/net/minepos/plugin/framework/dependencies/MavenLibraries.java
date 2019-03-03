@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
-/// Credit to lucko, this dependency management system wouldn't be possible without his helper project to guide me
+// Credit to lucko, this dependency management system wouldn't be possible without his helper project to guide me
 // https://lucko.me luck@lucko.me
 // ------------------------------
 @Documented
