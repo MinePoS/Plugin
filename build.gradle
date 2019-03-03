@@ -25,6 +25,8 @@ dependencies {
     compileOnly 'org.apache.commons:commons-lang3:+'
     compileOnly 'com.google.code.gson:gson:+'
     compileOnly 'commons-io:commons-io:+'
+    compileOnly 'org.nanohttpd:nanohttpd:2.3.1'
+    compileOnly 'org.nanohttpd:nanohttpd-websocket:2.3.1'
     compileOnly 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
 }
 
@@ -39,6 +41,10 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         filter ReplaceTokens, tokens: [version: version]
     }
+}
+
+shadowJar {
+    destinationDir = file("$rootDir/spigot/plugins/")
 }
 
 compileJava.options.encoding = 'UTF-8'

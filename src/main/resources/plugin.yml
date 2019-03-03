@@ -1,0 +1,6 @@
+name: MinePoS
+version: @version@
+main: net.minepos.plugin.MineposPlugin
+description: MinePoS plugin
+author: PiggyPiglet
+website: https://minepos.net
