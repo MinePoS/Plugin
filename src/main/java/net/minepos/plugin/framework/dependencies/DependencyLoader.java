@@ -1,4 +1,4 @@
-package net.minepos.plugin.core.framework.dependencies;
+package net.minepos.plugin.framework.dependencies;
 
 import lombok.Data;
 import net.minepos.plugin.MineposPlugin;

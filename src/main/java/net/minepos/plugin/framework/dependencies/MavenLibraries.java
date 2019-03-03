@@ -1,4 +1,4 @@
-package net.minepos.plugin.core.framework.dependencies;
+package net.minepos.plugin.framework.dependencies;
 
 import javax.annotation.Nonnull;
 import java.lang.annotation.*;

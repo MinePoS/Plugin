@@ -1,9 +1,9 @@
-package net.minepos.plugin.core.framework;
+package net.minepos.plugin.framework;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.google.inject.*;
+import com.google.inject.name.Named;
 import net.minepos.plugin.MineposPlugin;
+import org.reflections.Reflections;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -23,5 +23,12 @@ public final class BinderModule extends AbstractModule {
     @Override
     public void configure() {
         bind(MineposPlugin.class).toInstance(main);
+    }
+
+    @Provides
+    @Singleton
+    @Named("Reflections")
+    public Reflections providesReflections() {
+        return new Reflections("net.minepos.plugin");
     }
 }

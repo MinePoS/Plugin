@@ -26,7 +26,6 @@ dependencies {
     compileOnly 'com.google.code.gson:gson:+'
     compileOnly 'commons-io:commons-io:+'
     compileOnly 'org.nanohttpd:nanohttpd:2.3.1'
-    compileOnly 'org.nanohttpd:nanohttpd-websocket:2.3.1'
     compileOnly 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
 }
 
@@ -45,6 +44,7 @@ processResources {
 
 shadowJar {
     destinationDir = file("$rootDir/spigot/plugins/")
+    delete("$rootDir/spigot/plugins/MinePoS")
 }
 
 compileJava.options.encoding = 'UTF-8'

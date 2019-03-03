@@ -2,12 +2,22 @@ package net.minepos.plugin;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import net.minepos.plugin.core.framework.BinderModule;
-import net.minepos.plugin.core.framework.dependencies.DependencyLoader;
-import net.minepos.plugin.core.framework.dependencies.MavenLibraries;
-import net.minepos.plugin.core.framework.dependencies.MavenLibrary;
+import com.google.inject.name.Named;
+import net.minepos.plugin.core.enums.Registerables;
+import net.minepos.plugin.core.storage.file.GFile;
+import net.minepos.plugin.framework.BinderModule;
+import net.minepos.plugin.framework.Registerable;
+import net.minepos.plugin.framework.dependencies.DependencyLoader;
+import net.minepos.plugin.framework.dependencies.MavenLibraries;
+import net.minepos.plugin.framework.dependencies.MavenLibrary;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.reflections.Reflections;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static net.minepos.plugin.core.enums.Registerables.GFILE;
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
@@ -21,12 +31,12 @@ import org.bukkit.plugin.java.JavaPlugin;
                 @MavenLibrary(groupId = "aopalliance", artifactId = "aopalliance", version = "1.0"),
                 @MavenLibrary(groupId = "org.apache.commons", artifactId = "commons-lang3", version = "3.8.1"),
                 @MavenLibrary(groupId = "commons-io", artifactId = "commons-io", version = "2.6"),
-                @MavenLibrary(groupId = "org.nanohttpd", artifactId = "nanohttpd", version = "2.3.1"),
-                @MavenLibrary(groupId = "org.nanohttpd", artifactId = "nanohttpd-websocket", version = "2.3.1")
+                @MavenLibrary(groupId = "org.nanohttpd", artifactId = "nanohttpd", version = "2.3.1")
         }
 )
 public final class MineposPlugin extends JavaPlugin {
-    @Inject private WebSocketManager webSocketManager;
+    @Inject @Named("Reflections") private Reflections reflections;
+    @Inject private GFile gFile;
 
     @Override
     public void onEnable() {
@@ -35,11 +45,9 @@ public final class MineposPlugin extends JavaPlugin {
         Injector injector = new BinderModule(this).createInjector();
         injector.injectMembers(this);
 
-        webSocketManager.start();
-    }
+        Map<Registerables, Registerable> registerables = reflections.getSubTypesOf(Registerable.class).stream().map(injector::getInstance).collect(Collectors.toMap(Registerable::getRegisterable, r -> r));
+        Stream.of(GFILE).map(registerables::get).forEach(Registerable::run);
 
-    @Override
-    public void onDisable() {
-        webSocketManager.stop();
+        System.out.println(gFile.getFileConfiguration("config").getString("test"));
     }
 }
