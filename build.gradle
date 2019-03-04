@@ -17,6 +17,9 @@ repositories {
     maven {
         url = 'https://oss.sonatype.org/content/repositories/snapshots'
     }
+    maven {
+        url = 'https://repo.piggypiglet.me/repository/maven-releases/'
+    }
 }
 
 dependencies {
@@ -25,7 +28,9 @@ dependencies {
     compileOnly 'org.apache.commons:commons-lang3:+'
     compileOnly 'com.google.code.gson:gson:+'
     compileOnly 'commons-io:commons-io:+'
-    compileOnly 'org.nanohttpd:nanohttpd:2.3.1'
+//    compileOnly 'org.nanohttpd:nanohttpd:2.3.1'
+    compileOnly 'org.apache.httpcomponents:httpclient:+'
+    compileOnly 'me.piggypiglet:TimeAPI:+'
     compileOnly 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
 }
 

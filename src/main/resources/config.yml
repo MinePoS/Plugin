@@ -1,1 +1,6 @@
-test: "test"
+api:
+  key: ""
+  url: "https://demo.minepos.net"
+cache:
+  enabled: true
+  refresh-time: "10 mins"

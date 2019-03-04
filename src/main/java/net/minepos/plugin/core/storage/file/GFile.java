@@ -55,8 +55,7 @@ public final class GFile {
         return path.toLowerCase().endsWith(".yml");
     }
 
-    @SuppressWarnings("unchecked")
-    public void insertIntoMap(String name, File file) {
+    private void insertIntoMap(String name, File file) {
         Map<String, Object> populatorMap = new HashMap<>();
 
         try {

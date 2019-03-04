@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.name.Named;
 import net.minepos.plugin.core.enums.Registerables;
-import net.minepos.plugin.core.storage.file.GFile;
 import net.minepos.plugin.framework.BinderModule;
 import net.minepos.plugin.framework.Registerable;
 import net.minepos.plugin.framework.dependencies.DependencyLoader;
@@ -18,6 +17,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static net.minepos.plugin.core.enums.Registerables.GFILE;
+import static net.minepos.plugin.core.enums.Registerables.MINEPOS_API;
+
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
@@ -31,12 +32,15 @@ import static net.minepos.plugin.core.enums.Registerables.GFILE;
                 @MavenLibrary(groupId = "aopalliance", artifactId = "aopalliance", version = "1.0"),
                 @MavenLibrary(groupId = "org.apache.commons", artifactId = "commons-lang3", version = "3.8.1"),
                 @MavenLibrary(groupId = "commons-io", artifactId = "commons-io", version = "2.6"),
-                @MavenLibrary(groupId = "org.nanohttpd", artifactId = "nanohttpd", version = "2.3.1")
+                @MavenLibrary(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.5.7"),
+                @MavenLibrary(groupId = "org.apache.httpcomponents", artifactId = "httpcore", version = "4.4.11"),
+                @MavenLibrary(groupId = "commons-logging", artifactId = "commons-logging", version = "1.2"),
+                @MavenLibrary(groupId = "me.piggypiglet", artifactId = "TimeAPI", version = "1.3", repo = "https://repo.piggypiglet.me/repository/maven-releases/")
+//                @MavenLibrary(groupId = "org.nanohttpd", artifactId = "nanohttpd", version = "2.3.1")
         }
 )
 public final class MineposPlugin extends JavaPlugin {
     @Inject @Named("Reflections") private Reflections reflections;
-    @Inject private GFile gFile;
 
     @Override
     public void onEnable() {
@@ -46,8 +50,6 @@ public final class MineposPlugin extends JavaPlugin {
         injector.injectMembers(this);
 
         Map<Registerables, Registerable> registerables = reflections.getSubTypesOf(Registerable.class).stream().map(injector::getInstance).collect(Collectors.toMap(Registerable::getRegisterable, r -> r));
-        Stream.of(GFILE).map(registerables::get).forEach(Registerable::run);
-
-        System.out.println(gFile.getFileConfiguration("config").getString("test"));
+        Stream.of(GFILE, MINEPOS_API).map(registerables::get).forEach(Registerable::run);
     }
 }

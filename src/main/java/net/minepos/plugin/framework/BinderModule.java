@@ -2,6 +2,7 @@ package net.minepos.plugin.framework;
 
 import com.google.inject.*;
 import com.google.inject.name.Named;
+import net.minepos.plugin.MineposAPI;
 import net.minepos.plugin.MineposPlugin;
 import org.reflections.Reflections;
 
@@ -11,6 +12,7 @@ import org.reflections.Reflections;
 // ------------------------------
 public final class BinderModule extends AbstractModule {
     private final MineposPlugin main;
+    private final MineposAPI api = new MineposAPI();
 
     public BinderModule(MineposPlugin main) {
         this.main = main;
@@ -23,6 +25,7 @@ public final class BinderModule extends AbstractModule {
     @Override
     public void configure() {
         bind(MineposPlugin.class).toInstance(main);
+        requestInjection(api);
     }
 
     @Provides
@@ -30,5 +33,12 @@ public final class BinderModule extends AbstractModule {
     @Named("Reflections")
     public Reflections providesReflections() {
         return new Reflections("net.minepos.plugin");
+    }
+
+    @Provides
+    @Singleton
+    @Named("MinePoS")
+    public MineposAPI providesMineposAPI() {
+        return api;
     }
 }
