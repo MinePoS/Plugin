@@ -16,8 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static net.minepos.plugin.core.enums.Registerables.GFILE;
-import static net.minepos.plugin.core.enums.Registerables.MINEPOS_API;
+import static net.minepos.plugin.core.enums.Registerables.*;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -26,7 +25,7 @@ import static net.minepos.plugin.core.enums.Registerables.MINEPOS_API;
 @MavenLibraries(
         value = {
                 @MavenLibrary(groupId = "org.reflections", artifactId = "reflections", version = "0.9.11"),
-                @MavenLibrary(groupId = "javassist", artifactId = "javassist", version = "3.12.1.GA"),
+                @MavenLibrary(groupId = "org.javassist", artifactId = "javassist", version = "3.24.1-GA"),
                 @MavenLibrary(groupId = "com.google.inject", artifactId = "guice", version = "4.2.2"),
                 @MavenLibrary(groupId = "javax.inject", artifactId = "javax.inject", version = "1"),
                 @MavenLibrary(groupId = "aopalliance", artifactId = "aopalliance", version = "1.0"),
@@ -50,6 +49,6 @@ public final class MineposPlugin extends JavaPlugin {
         injector.injectMembers(this);
 
         Map<Registerables, Registerable> registerables = reflections.getSubTypesOf(Registerable.class).stream().map(injector::getInstance).collect(Collectors.toMap(Registerable::getRegisterable, r -> r));
-        Stream.of(GFILE, MINEPOS_API).map(registerables::get).forEach(Registerable::run);
+        Stream.of(GFILE, API_PARAMS, MINEPOS_API).map(registerables::get).forEach(Registerable::run);
     }
 }
