@@ -49,6 +49,6 @@ public final class MineposPlugin extends JavaPlugin {
         injector.injectMembers(this);
 
         Map<Registerables, Registerable> registerables = reflections.getSubTypesOf(Registerable.class).stream().map(injector::getInstance).collect(Collectors.toMap(Registerable::getRegisterable, r -> r));
-        Stream.of(GFILE, API_PARAMS, MINEPOS_API).map(registerables::get).forEach(Registerable::run);
+        Stream.of(GFILE, API_PARAMS, MINEPOS_API, COMMANDS).map(registerables::get).forEach(Registerable::run);
     }
 }

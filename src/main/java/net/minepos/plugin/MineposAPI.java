@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -26,6 +27,7 @@ public final class MineposAPI {
     @Inject private APIParamManager paramManager;
 
     @Getter private MineposAPIOptions options;
+    // guava multimap would be perfect for this, if only the ids automatically re-adjusted on the web side of things.
     private final Map<APIKeys, Map<Integer, Object>> api = new ConcurrentHashMap<>();
     private String URL;
 
@@ -51,17 +53,15 @@ public final class MineposAPI {
     @SuppressWarnings("unchecked")
     private void populateMap() {
         for (APIKeys key : APIKeys.values()) {
+            api.put(key, new HashMap<>());
+
             // replace ?apikey instead of splitting at ? in-case their url is something stupid like example.com/?minepos
-            List<JFileConfiguration> data = ((List<Object>) WebUtils.getJsonEntity(this.URL.replace("?apikey", key.getParameter() + "?apikey")).get("data", new ArrayList<>()))
-                    .stream().map(new JFileConfiguration());
+            List<Object> jsonObjects = (List<Object>) WebUtils.getJsonEntity(this.URL.replace("?apikey", key.getParameter() + "?apikey")).get("data", new ArrayList<>());
+            List<JFileConfiguration> data = (jsonObjects == null || jsonObjects.isEmpty()) ? new ArrayList<>() : jsonObjects.stream().map(d -> new JFileConfiguration((Map<String, Object>) d)).collect(Collectors.toList());
 
-            JFileConfiguration json = new JFileConfiguration((Map<String, Object>) obj);
-            Map<Integer, Object> populatorMap = new HashMap<>();
-
-            populatorMap.put(data.getInt("id"), paramManager.run(key, data));
-            api.put(key, populatorMap);
+            for (JFileConfiguration json : data) {
+                api.get(key).put(json.getInt("id"), paramManager.run(key, json));
+            }
         }
-
-        System.out.println(api);
     }
 }

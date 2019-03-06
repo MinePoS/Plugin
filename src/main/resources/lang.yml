@@ -1,0 +1,5 @@
+ingame:
+  prefix: "&7[&cMinePoS&7]"
+  commands:
+    no-permission: "&7You do not have permission for that command."
+    incorrect-usage: "&7Incorrect usage, the correct usage for that command is: &c%s"

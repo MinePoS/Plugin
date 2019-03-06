@@ -20,7 +20,7 @@ public final class CategoryParam extends APIParam {
         return Category.builder()
                 .id(json.getInt("id"))
                 .name(json.getString("name"))
-                .shortDesc(json.getString("short_dev"))
+                .shortDesc(json.getString("short_desc"))
                 .visible(BooleanUtils.toBoolean(json.getInt("visible")))
                 .material(json.getString("material"))
                 .build();

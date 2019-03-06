@@ -172,4 +172,9 @@ public final class JFileConfiguration {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return itemMap.toString();
+    }
 }

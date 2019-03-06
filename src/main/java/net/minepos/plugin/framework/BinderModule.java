@@ -4,6 +4,7 @@ import com.google.inject.*;
 import com.google.inject.name.Named;
 import net.minepos.plugin.MineposAPI;
 import net.minepos.plugin.MineposPlugin;
+import net.minepos.plugin.core.storage.file.GCommands;
 import net.minepos.plugin.core.utils.http.WebUtils;
 import org.reflections.Reflections;
 
@@ -27,7 +28,7 @@ public final class BinderModule extends AbstractModule {
     public void configure() {
         bind(MineposPlugin.class).toInstance(main);
         requestInjection(api);
-        requestStaticInjection(WebUtils.class);
+        requestStaticInjection(WebUtils.class, GCommands.class);
     }
 
     @Provides
