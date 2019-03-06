@@ -26,7 +26,7 @@ public final class CommandsRegisterable extends Registerable {
 
     @Override
     protected void execute() {
-        main.getCommand("test").setExecutor(commandManager);
+        main.getCommand("minepos").setExecutor(commandManager);
         reflections.getSubTypesOf(Command.class).stream().map(injector::getInstance).forEach(commandManager.getCommands()::add);
     }
 }

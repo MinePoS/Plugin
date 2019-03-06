@@ -3,3 +3,4 @@ ingame:
   commands:
     no-permission: "&7You do not have permission for that command."
     incorrect-usage: "&7Incorrect usage, the correct usage for that command is: &c%s"
+    unknown-command: "&7Unknown command, type &c/minepos help&7 for help."

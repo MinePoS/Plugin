@@ -5,5 +5,5 @@ description: MinePoS plugin
 author: PiggyPiglet
 website: https://minepos.net
 commands:
-  test:
+  minepos:
     description: "test"

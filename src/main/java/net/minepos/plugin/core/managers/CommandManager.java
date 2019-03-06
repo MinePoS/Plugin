@@ -50,7 +50,7 @@ public final class CommandManager implements CommandExecutor {
                 }
             }
 
-            MessageUtils.sendMessage(sender, "ingame.commands.unknown-command", commandOnly);
+            MessageUtils.sendMessage(sender, "ingame.commands.unknown-command");
         }
 
         return true;
