@@ -3,7 +3,6 @@ package net.minepos.plugin.implementations.registerables;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.name.Named;
-import net.minepos.plugin.MineposPlugin;
 import net.minepos.plugin.core.enums.Registerables;
 import net.minepos.plugin.core.managers.BaseCommandManager;
 import net.minepos.plugin.core.managers.CommandManager;
@@ -18,7 +17,6 @@ import org.reflections.Reflections;
 public final class CommandsRegisterable extends Registerable {
     @Inject @Named("Reflections") private Reflections reflections;
     @Inject private Injector injector;
-    @Inject private MineposPlugin main;
     @Inject private BaseCommandManager baseCommandManager;
     @Inject private CommandManager commandManager;
 

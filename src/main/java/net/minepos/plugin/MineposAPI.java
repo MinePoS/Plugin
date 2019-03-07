@@ -28,7 +28,7 @@ public final class MineposAPI {
 
     @Getter private MineposAPIOptions options;
     // guava multimap would be perfect for this, if only the ids automatically re-adjusted on the web side of things.
-    private final Map<APIKeys, Map<Integer, Object>> api = new ConcurrentHashMap<>();
+    private Map<APIKeys, Map<Integer, Object>> api;
     private String URL;
 
     public void connect(MineposAPIOptions options) throws MineposConnectionException {
@@ -51,17 +51,21 @@ public final class MineposAPI {
     }
 
     @SuppressWarnings("unchecked")
-    private void populateMap() {
+    public void populateMap() {
+        Map<APIKeys, Map<Integer, Object>> populator = new HashMap<>();
+
         for (APIKeys key : APIKeys.values()) {
-            api.put(key, new HashMap<>());
+            populator.put(key, new HashMap<>());
 
             // replace ?apikey instead of splitting at ? in-case their url is something stupid like example.com/?minepos
             List<Object> jsonObjects = (List<Object>) WebUtils.getJsonEntity(this.URL.replace("?apikey", key.getParameter() + "?apikey")).get("data", new ArrayList<>());
             List<JFileConfiguration> data = (jsonObjects == null || jsonObjects.isEmpty()) ? new ArrayList<>() : jsonObjects.stream().map(d -> new JFileConfiguration((Map<String, Object>) d)).collect(Collectors.toList());
 
             for (JFileConfiguration json : data) {
-                api.get(key).put(json.getInt("id"), paramManager.run(key, json));
+                populator.get(key).put(json.getInt("id"), paramManager.run(key, json));
             }
         }
+
+        api = new ConcurrentHashMap<>(populator);
     }
 }

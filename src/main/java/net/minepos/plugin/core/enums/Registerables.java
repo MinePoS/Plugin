@@ -5,5 +5,5 @@ package net.minepos.plugin.core.enums;
 // https://www.piggypiglet.me
 // ------------------------------
 public enum Registerables {
-    GFILE, API_PARAMS, MINEPOS_API, COMMANDS
+    GFILE, API_PARAMS, MINEPOS_API, COMMANDS, TASKS
 }
