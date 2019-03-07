@@ -1,0 +1,4 @@
+base-commands:
+  - "buy"
+  - "minepos"
+base-command-description: "MinePoS base command"

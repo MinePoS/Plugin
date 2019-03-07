@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.name.Named;
 import net.minepos.plugin.MineposPlugin;
 import net.minepos.plugin.core.enums.Registerables;
+import net.minepos.plugin.core.managers.BaseCommandManager;
 import net.minepos.plugin.core.managers.CommandManager;
 import net.minepos.plugin.framework.Command;
 import net.minepos.plugin.framework.Registerable;
@@ -18,6 +19,7 @@ public final class CommandsRegisterable extends Registerable {
     @Inject @Named("Reflections") private Reflections reflections;
     @Inject private Injector injector;
     @Inject private MineposPlugin main;
+    @Inject private BaseCommandManager baseCommandManager;
     @Inject private CommandManager commandManager;
 
     public CommandsRegisterable() {
@@ -26,7 +28,7 @@ public final class CommandsRegisterable extends Registerable {
 
     @Override
     protected void execute() {
-        main.getCommand("minepos").setExecutor(commandManager);
+        baseCommandManager.register();
         reflections.getSubTypesOf(Command.class).stream().map(injector::getInstance).forEach(commandManager.getCommands()::add);
     }
 }

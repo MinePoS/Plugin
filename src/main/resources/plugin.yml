@@ -4,6 +4,3 @@ main: net.minepos.plugin.MineposPlugin
 description: MinePoS plugin
 author: PiggyPiglet
 website: https://minepos.net
-commands:
-  minepos:
-    description: "test"
