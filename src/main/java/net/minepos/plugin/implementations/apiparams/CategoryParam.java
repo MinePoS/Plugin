@@ -18,11 +18,11 @@ public final class CategoryParam extends APIParam {
     @Override
     protected Object execute(JFileConfiguration json) {
         return Category.builder()
-                .id(json.getInt("id"))
-                .name(json.getString("name"))
-                .shortDesc(json.getString("short_desc"))
-                .visible(BooleanUtils.toBoolean(json.getInt("visible")))
-                .material(json.getString("material"))
+                .id(json.getInt("category.id"))
+                .name(json.getString("category.name"))
+                .shortDesc(json.getString("category.short_desc"))
+                .visible(BooleanUtils.toBoolean(json.getInt("category.visible")))
+                .material(json.getString("category.material"))
                 .build();
     }
 }

@@ -20,7 +20,7 @@ public final class TestCommand extends Command {
 
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
-        sender.sendMessage(api.getCategory(2).getName());
+        sender.sendMessage(api.getCategories().toString());
 
         return true;
     }
