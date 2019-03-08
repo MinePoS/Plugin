@@ -1,6 +1,7 @@
 package net.minepos.plugin.implementations.registerables;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import net.minepos.plugin.MineposAPI;
 import net.minepos.plugin.core.enums.Registerables;
 import net.minepos.plugin.core.objects.tasks.Task;
@@ -14,7 +15,7 @@ import sh.okx.timeapi.TimeAPI;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class TasksRegisterable extends Registerable {
-    @Inject private MineposAPI api;
+    @Inject @Named("MinePoS") private MineposAPI api;
     @Inject private GFile gFile;
 
     public TasksRegisterable() {
@@ -26,7 +27,8 @@ public final class TasksRegisterable extends Registerable {
         FileConfiguration config = gFile.getFileConfiguration("config");
 
         if (config.getBoolean("cache.enabled")) {
-            Task.asyncInterval(r -> api.populateMap(), new TimeAPI(config.getString("cache.refresh-time")), false);
+            Task.asyncInterval(r -> api.populateMap(), new TimeAPI(config.getString("cache.refresh-time")), true);
+            api.setCache(true);
         }
     }
 }

@@ -7,11 +7,13 @@ import lombok.Getter;
 // https://www.piggypiglet.me
 // ------------------------------
 public enum APIKeys {
-    CATEGORIES("get-categories");
+    CATEGORIES("get-categories", "get-category");
 
     @Getter private final String parameter;
+    @Getter private final String individual;
 
-    APIKeys(String parameter) {
+    APIKeys(String parameter, String individual) {
         this.parameter = parameter;
+        this.individual = individual;
     }
 }

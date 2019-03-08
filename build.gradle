@@ -49,7 +49,7 @@ processResources {
 
 shadowJar {
     destinationDir = file("$rootDir/spigot/plugins/")
-    delete("$rootDir/spigot/plugins/MinePoS")
+//    delete("$rootDir/spigot/plugins/MinePoS")
 }
 
 compileJava.options.encoding = 'UTF-8'
