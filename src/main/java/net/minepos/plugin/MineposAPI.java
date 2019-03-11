@@ -67,7 +67,6 @@ public final class MineposAPI {
         Map<Integer, Object> map = new HashMap<>();
 
         // replace ?apikey instead of splitting at ? in-case their url is something stupid like example.com/?minepos
-        System.out.println(this.URL);
         List<Object> jsonObjects = (List<Object>) WebUtils.getJsonEntity(this.URL.replace("?apikey", key.getParameter() + "?apikey")).get("data", new ArrayList<>());
         List<JFileConfiguration> data = (jsonObjects == null || jsonObjects.isEmpty()) ? new ArrayList<>() : jsonObjects.stream().map(d -> new JFileConfiguration((Map<String, Object>) d)).collect(Collectors.toList());
 

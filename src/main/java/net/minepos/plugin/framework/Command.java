@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 // ------------------------------
 public abstract class Command {
     @Getter private final Commands command;
+    @Getter protected boolean playerOnly = false;
 
     protected Command(Commands command) {
         this.command = command;
