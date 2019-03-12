@@ -5,7 +5,6 @@ import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
-import java.util.Arrays;
 import java.util.List;
 
 // ------------------------------
@@ -22,14 +21,6 @@ public final class GUI {
 
     public static class GUIBuilder {
         private GUIBuilder inventory(Inventory inventory) {
-            return this;
-        }
-
-        public GUIBuilder items(GUIItem... items) {
-            if (items != null) {
-                this.items = Arrays.asList(items);
-            }
-
             return this;
         }
 

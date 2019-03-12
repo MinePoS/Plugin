@@ -9,6 +9,7 @@ import net.minepos.plugin.core.utils.text.StringUtils;
 import net.minepos.plugin.framework.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +33,11 @@ public final class CommandManager implements CommandExecutor {
                 Commands cmds = cmd.getCommand();
 
                 if (StringUtils.startsWith(text, GCommands.getCommands(cmds))) {
+                    if (cmd.isPlayerOnly() && !(sender instanceof Player)) {
+                        MessageUtils.sendMessage(sender, "ingame.commands.player-only");
+                        return true;
+                    }
+
                     String[] permissions = GCommands.getPermissions(cmds);
 
                     if (Arrays.stream(permissions).anyMatch(sender::hasPermission) || permissions.length == 0) {
