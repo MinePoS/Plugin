@@ -1,2 +1,6 @@
-rootProject.name = 'plugin'
+rootProject.name = 'minepos-plugin'
 
+include (
+        'core',
+        'spigot'
+)

@@ -1,5 +1,5 @@
 api:
-  key: ""
+  key: "6d3adb1b85520c228e47262efd38083e237bbf69"
   url: "https://demo.minepos.net"
 cache:
   enabled: true

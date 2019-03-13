@@ -1,55 +1,23 @@
-plugins {
-    id 'java'
-    id 'idea'
-    id 'io.franzbecker.gradle-lombok' version '1.14'
-    id 'com.github.johnrengelman.shadow' version '2.0.2'
-}
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
 
-group 'net.minepos'
-version '1.0.0'
-sourceCompatibility = 1.8
+    group 'net.minepos'
+    version '1.0.0'
+    sourceCompatibility = 1.8
 
-repositories {
-    mavenCentral()
-    maven {
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    repositories {
+        mavenCentral()
+        maven {
+            url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        }
+        maven {
+            url = 'https://oss.sonatype.org/content/repositories/snapshots'
+        }
+        maven {
+            url = 'https://repo.piggypiglet.me/repository/maven-releases/'
+        }
     }
-    maven {
-        url = 'https://oss.sonatype.org/content/repositories/snapshots'
-    }
-    maven {
-        url = 'https://repo.piggypiglet.me/repository/maven-releases/'
-    }
+
+    compileJava.options.encoding = 'UTF-8'
 }
-
-dependencies {
-    compileOnly 'org.reflections:reflections:+'
-    compileOnly 'com.google.inject:guice:+'
-    compileOnly 'org.apache.commons:commons-lang3:+'
-    compileOnly 'com.google.code.gson:gson:+'
-    compileOnly 'commons-io:commons-io:+'
-//    compileOnly 'org.nanohttpd:nanohttpd:2.3.1'
-    compileOnly 'org.apache.httpcomponents:httpclient:+'
-    compileOnly 'me.piggypiglet:TimeAPI:+'
-    compileOnly 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
-}
-
-lombok {
-    version = '1.18.4'
-    sha256 = ""
-}
-
-import org.apache.tools.ant.filters.ReplaceTokens
-
-processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        filter ReplaceTokens, tokens: [version: version]
-    }
-}
-
-shadowJar {
-    destinationDir = file("$rootDir/spigot/plugins/")
-    delete("$rootDir/spigot/plugins/MinePoS/lang.yml")
-}
-
-compileJava.options.encoding = 'UTF-8'
