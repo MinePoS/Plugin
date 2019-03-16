@@ -1,0 +1,5 @@
+dependencies {
+    compile project(":common")
+
+    compileOnly 'org.slf4j:slf4j-api:+'
+}

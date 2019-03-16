@@ -1,23 +1,7 @@
-plugins {
-    id 'io.franzbecker.gradle-lombok' version '1.14'
-    id 'com.github.johnrengelman.shadow' version '2.0.2'
-}
-
 dependencies {
-    compileOnly 'org.reflections:reflections:+'
-    compileOnly 'com.google.inject:guice:+'
-    compileOnly 'org.apache.commons:commons-lang3:+'
-    compileOnly 'com.google.code.gson:gson:+'
-    compileOnly 'commons-io:commons-io:+'
-//    compileOnly 'org.nanohttpd:nanohttpd:2.3.1'
-    compileOnly 'org.apache.httpcomponents:httpclient:+'
-    compileOnly 'me.piggypiglet:TimeAPI:+'
+    compile project(":common")
+    
     compileOnly 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
-}
-
-lombok {
-    version = '1.18.4'
-    sha256 = ""
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens

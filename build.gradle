@@ -1,6 +1,21 @@
+buildscript {
+    repositories {
+        maven {
+            url = 'https://plugins.gradle.org/m2'
+        }
+
+        dependencies {
+            classpath 'io.franzbecker:gradle-lombok:1.14'
+            classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+        }
+    }
+}
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
+    apply plugin: 'io.franzbecker.gradle-lombok'
+    apply plugin: 'com.github.johnrengelman.shadow'
 
     group 'net.minepos'
     version '1.0.0'
@@ -17,6 +32,22 @@ subprojects {
         maven {
             url = 'https://repo.piggypiglet.me/repository/maven-releases/'
         }
+    }
+
+    dependencies {
+        compileOnly 'org.reflections:reflections:+'
+        compileOnly 'com.google.inject:guice:+'
+        compileOnly 'org.apache.commons:commons-lang3:+'
+        compileOnly 'com.google.code.gson:gson:+'
+        compileOnly 'commons-io:commons-io:+'
+//    compileOnly 'org.nanohttpd:nanohttpd:2.3.1'
+        compileOnly 'org.apache.httpcomponents:httpclient:+'
+        compileOnly 'me.piggypiglet:TimeAPI:+'
+    }
+
+    lombok {
+        version = '1.18.4'
+        sha256 = ""
     }
 
     compileJava.options.encoding = 'UTF-8'

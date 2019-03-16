@@ -1,6 +1,6 @@
 rootProject.name = 'minepos-plugin'
 
 include (
-        'core',
+        'common',
         'spigot'
 )
