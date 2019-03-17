@@ -25,4 +25,7 @@ public @interface MavenLibrary {
 
     @Nonnull
     String repo() default "https://repo1.maven.org/maven2";
+
+    @Nonnull
+    String hash();
 }

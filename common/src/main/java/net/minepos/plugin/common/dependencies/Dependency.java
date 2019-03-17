@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.net.URL;
+import java.util.Base64;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -15,15 +16,22 @@ public class Dependency {
     private final String artifactId;
     private final String version;
     private final String repoUrl;
+    private final byte[] hash;
 
     public class DependencyBuilder {
+        public DependencyBuilder hash(String hash) {
+            this.hash = Base64.getDecoder().decode(hash);
+            return this;
+        }
+
         public Dependency build() {
             // Builder.Default doesn't work, so this is the next best thing.
             return new Dependency(
                     groupId == null ? "" : groupId,
                     artifactId == null ? "" : artifactId,
                     version == null ? "" : version,
-                    repoUrl == null ? "https://repo1.maven.org/maven2" : repoUrl
+                    repoUrl == null ? "https://repo1.maven.org/maven2" : repoUrl,
+                    hash == null ? new byte[]{} : hash
             );
         }
     }

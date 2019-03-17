@@ -7,14 +7,15 @@ import net.minepos.plugin.common.dependencies.Dependency;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class DependencyUtils {
-    public static Dependency shorthand(String shorthand, String... repoUrl) {
+    public static Dependency shorthand(String shorthand, String hash, String... repoUrl) {
         String[] bits = shorthand.split(":");
 
         if (bits.length >= 3) {
             Dependency.DependencyBuilder builder = Dependency.builder()
                     .groupId(bits[0])
                     .artifactId(bits[1])
-                    .version(bits[2]);
+                    .version(bits[2])
+                    .hash(hash);
 
             if (repoUrl.length >= 1) {
                 builder.repoUrl(repoUrl[0]);
