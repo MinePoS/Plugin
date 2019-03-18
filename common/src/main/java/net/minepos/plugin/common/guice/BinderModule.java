@@ -3,6 +3,7 @@ package net.minepos.plugin.common.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import net.minepos.plugin.common.file.implementations.JsonFileConfiguration;
 import net.minepos.plugin.common.plugin.MineposPlugin;
 
 // ------------------------------
@@ -23,5 +24,6 @@ public final class BinderModule extends AbstractModule {
     @Override
     public void configure() {
         bind(MineposPlugin.class).toInstance(main);
+        requestInjection(JsonFileConfiguration.class);
     }
 }

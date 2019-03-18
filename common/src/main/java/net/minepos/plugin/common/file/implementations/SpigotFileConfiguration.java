@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
@@ -74,10 +75,19 @@ public final class SpigotFileConfiguration extends AbstractFileConfiguration {
         return value(bukkitConfig.getStringList(path), new ArrayList<>(), def);
     }
 
+    @SuppressWarnings("unchecked")
     @SafeVarargs
     @Override
     public final List<FileConfiguration> getConfigList(String path, List<FileConfiguration>... def) {
         List<?> list = getList(path);
+
+        for (Object obj : list) {
+            if (obj instanceof ConfigurationSection) {
+                return ((List<ConfigurationSection>) list).stream().map(SpigotFileConfiguration::new).collect(Collectors.toList());
+            }
+        }
+
+        return value(null, new ArrayList<>(), def);
     }
 
     @SafeVarargs
