@@ -2,7 +2,6 @@ package net.minepos.plugin.common.file.implementations;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
-import com.google.inject.Inject;
 import net.minepos.plugin.common.file.framework.AbstractFileConfiguration;
 import net.minepos.plugin.common.file.framework.FileConfiguration;
 import org.apache.commons.lang3.ArrayUtils;
@@ -19,8 +18,7 @@ import java.util.Map;
 // ------------------------------
 //TODO: eager load instead of lazy load
 public final class JsonFileConfiguration extends AbstractFileConfiguration {
-    @Inject private Gson gson;
-
+    private static final Gson GSON = new Gson();
     private static final String NULL_STRING = "null";
     private static final int NULL_NUM = 0;
     private static final boolean NULL_BOOL = false;
@@ -29,14 +27,14 @@ public final class JsonFileConfiguration extends AbstractFileConfiguration {
 
     public JsonFileConfiguration() {}
 
-    private JsonFileConfiguration(Map<String, Object> items) {
+    public JsonFileConfiguration(Map<String, Object> items) {
         this.items = items;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     protected void internalLoad(File file, String fileContent) {
-        items = gson.fromJson(fileContent, LinkedTreeMap.class);
+        items = GSON.fromJson(fileContent, LinkedTreeMap.class);
     }
 
     @Override
