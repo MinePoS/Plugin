@@ -2,7 +2,6 @@ package net.minepos.plugin.common.file.framework;
 
 import java.io.File;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 // ------------------------------
@@ -24,30 +23,8 @@ public abstract class AbstractFileConfiguration implements FileConfiguration {
         return (File) itemMap.get("file");
     }
 
-    @SuppressWarnings("unchecked")
-    protected Object getBuriedObject(String[] keys) {
-        int i = 1;
-        Map<String, Object> endObject = (Map<String, Object>) itemMap.get(keys[0]);
-
-        while (instanceOfMap(endObject.get(keys[i]))) {
-            endObject = (Map<String, Object>) endObject.get(keys[i++]);
-        }
-
-        return endObject.get(keys[i]);
-    }
-
     @SafeVarargs
     protected final <T> T value(T value, T nullValue, T... def) {
         return value == null ? def.length >= 1 ? def[0] : nullValue : value;
-    }
-
-    private boolean instanceOfMap(Object object) {
-        if (object instanceof Map) {
-            Set<?> keys = ((Map<?, ?>) object).keySet();
-
-            return keys.size() >= 1 && keys.toArray()[0] instanceof String;
-        }
-
-        return false;
     }
 }

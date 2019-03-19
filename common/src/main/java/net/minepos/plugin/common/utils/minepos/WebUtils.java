@@ -1,6 +1,6 @@
 package net.minepos.plugin.common.utils.minepos;
 
-import net.minepos.plugin.common.file.implementations.JsonFileConfiguration;
+import net.minepos.plugin.common.json.JsonParser;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -26,14 +26,12 @@ public final class WebUtils {
         return "";
     }
 
-    public static JsonFileConfiguration getJsonEntity(String URL) {
-        JsonFileConfiguration json = new JsonFileConfiguration();
-        json.load(null, getStringEntity(URL));
-        return json;
+    public static JsonParser getJsonEntity(String URL) {
+        return new JsonParser(getStringEntity(URL));
     }
 
     public static boolean validateConnection(String URL, String key) {
-        JsonFileConfiguration json;
+        JsonParser json;
 
         try {
             json = getJsonEntity(URL + "/?apikey=" + key);
@@ -41,6 +39,7 @@ public final class WebUtils {
             return false;
         }
 
-        return json.getBoolean("success", false);
+        Boolean bool = json.getBoolean("success");
+        return bool != null && bool;
     }
 }

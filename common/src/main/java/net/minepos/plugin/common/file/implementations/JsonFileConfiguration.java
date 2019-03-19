@@ -1,174 +1,93 @@
 package net.minepos.plugin.common.file.implementations;
 
-import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 import net.minepos.plugin.common.file.framework.AbstractFileConfiguration;
 import net.minepos.plugin.common.file.framework.FileConfiguration;
-import org.apache.commons.lang3.ArrayUtils;
+import net.minepos.plugin.common.json.JsonParser;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
-//TODO: eager load instead of lazy load
 public final class JsonFileConfiguration extends AbstractFileConfiguration {
-    private static final Gson GSON = new Gson();
     private static final String NULL_STRING = "null";
     private static final int NULL_NUM = 0;
     private static final boolean NULL_BOOL = false;
 
-    private Map<String, Object> items;
+    private JsonParser parser;
 
     public JsonFileConfiguration() {}
 
-    public JsonFileConfiguration(Map<String, Object> items) {
-        this.items = items;
+    private JsonFileConfiguration(JsonParser parser) {
+        this.parser = parser;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void internalLoad(File file, String fileContent) {
-        items = GSON.fromJson(fileContent, LinkedTreeMap.class);
+        parser = new JsonParser(fileContent);
     }
 
     @Override
     public Object get(String path, Object... def) {
-        Object object = itemMap.getOrDefault(path, null);
-
-        if (path.contains(".") && !path.startsWith(".") && !path.endsWith(".")) {
-            String[] areas = path.split("\\.");
-            object = items.getOrDefault(areas[0], null);
-
-            if (areas.length >= 2 && object != null) {
-                object = getBuriedObject(areas);
-            }
-        }
-
-        return value(object, null, def);
+        return value(parser.get(path), null, def);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public FileConfiguration getConfigSection(String path, FileConfiguration... def) {
-        Object object = get(path, (Object[]) def);
-
-        if (isConfigSection(object)) {
-            return new JsonFileConfiguration((Map<String, Object>) object);
-        }
-
-        return value(null, new JsonFileConfiguration(), def);
+        return value(new JsonFileConfiguration(parser.getJsonSection(path)), new JsonFileConfiguration(), def);
     }
 
     @Override
     public String getString(String path, String... def) {
-        Object object = get(path, (Object[]) def);
-
-        if (object instanceof String) {
-            return (String) object;
-        }
-
-        return value(null, NULL_STRING, def);
+        return value(parser.getString(path), NULL_STRING, def);
     }
 
     @Override
     public int getInt(String path, Integer... def) {
-        return (int) getDouble(path, ArrayUtils.toObject(Arrays.stream(ArrayUtils.toPrimitive(def)).asDoubleStream().toArray()));
+        return value(parser.getInt(path), NULL_NUM, def);
     }
 
     @Override
     public long getLong(String path, Long... def) {
-        return (long) getDouble(path, ArrayUtils.toObject(Arrays.stream(ArrayUtils.toPrimitive(def)).asDoubleStream().toArray()));
+        return value(parser.getLong(path), (long) NULL_NUM, def);
     }
 
     @Override
     public double getDouble(String path, Double... def) {
-        Object object = get(path, (Object[]) def);
-
-        if (object instanceof Double) {
-            return (double) object;
-        }
-
-        return value(null, (double) NULL_NUM, def);
+        return value(parser.getDouble(path), (double) NULL_NUM, def);
     }
 
     @Override
     public boolean getBoolean(String path, Boolean... def) {
-        Object object = get(path, (Object[]) def);
-
-        if (object instanceof Boolean) {
-            return (boolean) object;
-        }
-
-        return value(null, NULL_BOOL, def);
+        return value(parser.getBoolean(path), NULL_BOOL, def);
     }
 
-    @SuppressWarnings("unchecked")
     @SafeVarargs
     @Override
     public final List<String> getStringList(String path, List<String>... def) {
-        Object object = get(path, (Object[]) def);
-
-        if (object instanceof List<?>) {
-            for (Object obj : (List<?>) object) {
-                if (obj instanceof String) {
-                    return (List<String>) object;
-                }
-            }
-        }
-
-        return value(null, new ArrayList<>(), def);
+        return value(parser.getStringList(path), new ArrayList<>(), def);
     }
 
-    @SuppressWarnings("unchecked")
     @SafeVarargs
     @Override
     public final List<FileConfiguration> getConfigList(String path, List<FileConfiguration>... def) {
-        Object object = get(path, (Object[]) def);
+        List<JsonParser> jsons = parser.getJsonList(path);
 
-        if (object instanceof List<?>) {
-            List<FileConfiguration> configs = new ArrayList<>();
-
-            for (Object obj : (List<?>) object) {
-                if (isConfigSection(obj)) {
-                    configs.add(new JsonFileConfiguration((Map<String, Object>) obj));
-                }
-            }
-
-            if (configs.size() >= 1) {
-                return configs;
-            }
+        if (jsons == null) {
+            return value(null, new ArrayList<>(), def);
         }
 
-        return value(null, new ArrayList<>(), def);
+        //noinspection ConstantConditions
+        return value(parser.getJsonList(path).stream().map(JsonFileConfiguration::new).collect(Collectors.toList()), new ArrayList<>(), def);
     }
 
     @SafeVarargs
     @Override
     public final List<?> getList(String path, List<Object>... def) {
-        Object object = get(path, (Object[]) def);
-
-        if (object instanceof List<?>) {
-            return (List<?>) object;
-        }
-
-        return value(null, new ArrayList<>(), def);
-    }
-
-    private boolean isConfigSection(Object object) {
-        if (object instanceof Map<?, ?>) {
-            Map<?, ?> map = (Map<?, ?>) object;
-
-            if (map.size() >= 1) {
-                return map.keySet().toArray()[0] instanceof String && map.values().toArray()[0] != null;
-            }
-        }
-
-        return false;
+        return value(parser.getList(path), new ArrayList<>(), def);
     }
 }
