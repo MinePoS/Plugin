@@ -1,19 +1,31 @@
 package net.minepos.plugin.common.plugin;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.name.Named;
 import net.minepos.plugin.common.dependencies.Dependency;
 import net.minepos.plugin.common.dependencies.DependencyLoader;
+import net.minepos.plugin.common.guice.BinderModule;
 import net.minepos.plugin.common.logging.PluginLogger;
+import net.minepos.plugin.common.registerables.Registerable;
+import net.minepos.plugin.common.registerables.Registerables;
 import net.minepos.plugin.common.utils.DependencyUtils;
+import org.reflections.Reflections;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static net.minepos.plugin.common.registerables.Registerables.FILES;
 // ------------------------------
 // Copyright (c) PiggyPiglet 2019
 // https://www.piggypiglet.me
 // ------------------------------
 public abstract class MineposPlugin {
+    @Inject @Named("I-Reflections") private Reflections iReflections;
+    @Inject @Named("Reflections") private Reflections reflections;
+
     @SuppressWarnings("SpellCheckingInspection")
     protected final List<Dependency> dependencies = Stream.of(
             DependencyUtils.shorthand("org.reflections:reflections:0.9.11", "Q0NBODg0MjhGOEE4OTE5REY4ODUxMDU4MzNENDVGRjA3QkQyNkY5ODVGOTZFRTU1NjkwNTUxMjE2QjU4QjRBMQ=="),
@@ -31,10 +43,32 @@ public abstract class MineposPlugin {
 
     private final DependencyLoader dependencyLoader = new DependencyLoader(this);
 
-    public void load() {
+    protected final void load(Class<? extends Registerable>... registerables) {
+
+    }
+
+    protected final void load(Registerable... registerables) {
         dependencies.forEach(dependencyLoader::load);
         dependencyLoader.loadClass(getClass());
+
+        Injector injector = new BinderModule(this).createInjector();
+        injector.injectMembers(this);
+
+
     }
+
+    private void enable() {
+        Map<Registerables, Registerable> registerablesMap = getRegisterableMap(iReflections, injector);
+        registerablesMap.putAll(getRegisterableMap(reflections, injector));
+
+        Stream.of(FILES).map(registerablesMap::get).forEach(Registerable::run);
+    }
+
+    private Map<Registerables, Registerable> getRegisterableMap(Reflections reflections, Injector injector) {
+        return reflections.getSubTypesOf(Registerable.class).stream().map(injector::getInstance).collect(Collectors.toMap(Registerable::getRegisterable, r -> r));
+    }
+
+    public abstract String getPackage();
 
     public abstract PluginLogger getLogger();
 
