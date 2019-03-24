@@ -5,7 +5,6 @@ import net.minepos.plugin.common.file.framework.FileConfiguration;
 import net.minepos.plugin.common.json.JsonParser;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,10 +13,6 @@ import java.util.stream.Collectors;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class JsonFileConfiguration extends AbstractFileConfiguration {
-    private static final String NULL_STRING = "null";
-    private static final int NULL_NUM = 0;
-    private static final boolean NULL_BOOL = false;
-
     private JsonParser parser;
 
     public JsonFileConfiguration() {}
@@ -32,62 +27,59 @@ public final class JsonFileConfiguration extends AbstractFileConfiguration {
     }
 
     @Override
-    public Object get(String path, Object... def) {
-        return value(parser.get(path), null, def);
+    public Object get(String path) {
+        return parser.get(path);
     }
 
     @Override
-    public FileConfiguration getConfigSection(String path, FileConfiguration... def) {
-        return value(new JsonFileConfiguration(parser.getJsonSection(path)), new JsonFileConfiguration(), def);
+    public FileConfiguration getConfigSection(String path) {
+        return new JsonFileConfiguration(parser.getJsonSection(path));
     }
 
     @Override
-    public String getString(String path, String... def) {
-        return value(parser.getString(path), NULL_STRING, def);
+    public String getString(String path) {
+        return parser.getString(path);
     }
 
     @Override
-    public int getInt(String path, Integer... def) {
-        return value(parser.getInt(path), NULL_NUM, def);
+    public Integer getInt(String path) {
+        return parser.getInt(path);
     }
 
     @Override
-    public long getLong(String path, Long... def) {
-        return value(parser.getLong(path), (long) NULL_NUM, def);
+    public Long getLong(String path) {
+        return parser.getLong(path);
     }
 
     @Override
-    public double getDouble(String path, Double... def) {
-        return value(parser.getDouble(path), (double) NULL_NUM, def);
+    public Double getDouble(String path) {
+        return parser.getDouble(path);
     }
 
     @Override
-    public boolean getBoolean(String path, Boolean... def) {
-        return value(parser.getBoolean(path), NULL_BOOL, def);
+    public Boolean getBoolean(String path) {
+        return parser.getBoolean(path);
     }
 
-    @SafeVarargs
     @Override
-    public final List<String> getStringList(String path, List<String>... def) {
-        return value(parser.getStringList(path), new ArrayList<>(), def);
+    public final List<String> getStringList(String path) {
+        return parser.getStringList(path);
     }
 
-    @SafeVarargs
     @Override
-    public final List<FileConfiguration> getConfigList(String path, List<FileConfiguration>... def) {
+    public final List<FileConfiguration> getConfigList(String path) {
         List<JsonParser> jsons = parser.getJsonList(path);
 
+        // the npe shouldn't be caused in this class
         if (jsons == null) {
-            return value(null, new ArrayList<>(), def);
+            return null;
         }
 
-        //noinspection ConstantConditions
-        return value(parser.getJsonList(path).stream().map(JsonFileConfiguration::new).collect(Collectors.toList()), new ArrayList<>(), def);
+        return jsons.stream().map(JsonFileConfiguration::new).collect(Collectors.toList());
     }
 
-    @SafeVarargs
     @Override
-    public final List<?> getList(String path, List<Object>... def) {
-        return value(parser.getList(path), new ArrayList<>(), def);
+    public final List<?> getList(String path) {
+        return parser.getList(path);
     }
 }

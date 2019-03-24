@@ -3,7 +3,7 @@ package net.minepos.plugin.framework;
 import com.google.inject.*;
 import com.google.inject.name.Named;
 import net.minepos.plugin.MineposAPI;
-import net.minepos.plugin.MineposPlugin;
+import net.minepos.plugin.MineposJavaPlugin;
 import net.minepos.plugin.core.objects.tasks.Task;
 import net.minepos.plugin.core.storage.file.GCommands;
 import net.minepos.plugin.core.storage.file.GLang;
@@ -15,10 +15,10 @@ import org.reflections.Reflections;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class BinderModule extends AbstractModule {
-    private final MineposPlugin main;
+    private final MineposJavaPlugin main;
     private final MineposAPI api = new MineposAPI();
 
-    public BinderModule(MineposPlugin main) {
+    public BinderModule(MineposJavaPlugin main) {
         this.main = main;
     }
 
@@ -28,7 +28,7 @@ public final class BinderModule extends AbstractModule {
 
     @Override
     public void configure() {
-        bind(MineposPlugin.class).toInstance(main);
+        bind(MineposJavaPlugin.class).toInstance(main);
         requestInjection(api);
         requestStaticInjection(WebUtils.class, GCommands.class, GLang.class, Task.class);
     }

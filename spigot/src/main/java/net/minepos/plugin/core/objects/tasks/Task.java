@@ -1,7 +1,7 @@
 package net.minepos.plugin.core.objects.tasks;
 
 import com.google.inject.Inject;
-import net.minepos.plugin.MineposPlugin;
+import net.minepos.plugin.MineposJavaPlugin;
 import org.bukkit.Bukkit;
 import sh.okx.timeapi.TimeAPI;
 
@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class Task {
-    @Inject private static MineposPlugin main;
+    @Inject private static MineposJavaPlugin main;
 
     public static void async(Consumer<Runnable> task) {
         Bukkit.getScheduler().runTaskAsynchronously(main, runnable(task));

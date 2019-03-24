@@ -12,6 +12,7 @@ import net.minepos.plugin.common.registerables.Registerables;
 import net.minepos.plugin.common.utils.DependencyUtils;
 import org.reflections.Reflections;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ import static net.minepos.plugin.common.registerables.Registerables.FILES;
 // ------------------------------
 public abstract class MineposPlugin {
     @Inject @Named("I-Reflections") private Reflections iReflections;
-    @Inject @Named("Reflections") private Reflections reflections;
+    private Injector injector;
 
     @SuppressWarnings("SpellCheckingInspection")
     protected final List<Dependency> dependencies = Stream.of(
@@ -43,25 +44,29 @@ public abstract class MineposPlugin {
 
     private final DependencyLoader dependencyLoader = new DependencyLoader(this);
 
-    protected final void load(Class<? extends Registerable>... registerables) {
-
-    }
-
-    protected final void load(Registerable... registerables) {
+    private void load() {
         dependencies.forEach(dependencyLoader::load);
         dependencyLoader.loadClass(getClass());
 
-        Injector injector = new BinderModule(this).createInjector();
+        injector = new BinderModule(this).createInjector();
         injector.injectMembers(this);
-
-
     }
 
-    private void enable() {
+    protected final void load(Class<? extends Registerable>... registerables) {
+        load();
+        enable(Arrays.stream(registerables).map(injector::getInstance).toArray(Registerable[]::new));
+    }
+
+    protected final void load(Registerable... registerables) {
+        load();
+        enable(registerables);
+    }
+
+    private void enable(Registerable... registerables) {
         Map<Registerables, Registerable> registerablesMap = getRegisterableMap(iReflections, injector);
-        registerablesMap.putAll(getRegisterableMap(reflections, injector));
 
         Stream.of(FILES).map(registerablesMap::get).forEach(Registerable::run);
+        Arrays.stream(registerables).forEach(Registerable::run);
     }
 
     private Map<Registerables, Registerable> getRegisterableMap(Reflections reflections, Injector injector) {
@@ -70,7 +75,7 @@ public abstract class MineposPlugin {
 
     public abstract String getPackage();
 
-    public abstract PluginLogger getLogger();
+    public abstract PluginLogger getPluginLogger();
 
-    public abstract String getDataFolder();
+    public abstract String getPluginFolder();
 }

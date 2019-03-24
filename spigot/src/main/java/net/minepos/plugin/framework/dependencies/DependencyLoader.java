@@ -1,7 +1,7 @@
 package net.minepos.plugin.framework.dependencies;
 
 import lombok.Data;
-import net.minepos.plugin.MineposPlugin;
+import net.minepos.plugin.MineposJavaPlugin;
 import org.bukkit.Bukkit;
 
 import java.io.File;
@@ -44,7 +44,7 @@ public final class DependencyLoader {
     private static void load(Dependency d) {
         Logger logger = Bukkit.getLogger();
         String name = d.getArtifactId() + "-" + d.getVersion();
-        MineposPlugin main = (MineposPlugin) MineposPlugin.getProvidingPlugin(MineposPlugin.class);
+        MineposJavaPlugin main = (MineposJavaPlugin) MineposJavaPlugin.getProvidingPlugin(MineposJavaPlugin.class);
         File lib = new File(main.getDataFolder() + "/libs/", name + ".jar");
 
         logger.info(String.format("Loading dependency %s:%s:%s from %s", d.getGroupId(), d.getArtifactId(), d.getVersion(), d.getRepoUrl()));

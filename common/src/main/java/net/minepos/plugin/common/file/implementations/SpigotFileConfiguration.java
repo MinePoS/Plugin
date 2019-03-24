@@ -6,7 +6,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,50 +34,48 @@ public final class SpigotFileConfiguration extends AbstractFileConfiguration {
     }
 
     @Override
-    public Object get(String path, Object... def) {
-        return bukkitConfig.get(path, def.length >= 1 ? def : null);
+    public Object get(String path) {
+        return bukkitConfig.get(path);
     }
 
     @Override
-    public FileConfiguration getConfigSection(String path, FileConfiguration... def) {
-        return value(new SpigotFileConfiguration(bukkitConfig.getConfigurationSection(path)), new SpigotFileConfiguration(), def);
+    public FileConfiguration getConfigSection(String path) {
+        return new SpigotFileConfiguration(bukkitConfig.getConfigurationSection(path));
     }
 
     @Override
-    public String getString(String path, String... def) {
-        return value(bukkitConfig.getString(path), "", def);
+    public String getString(String path) {
+        return bukkitConfig.getString(path);
     }
 
     @Override
-    public int getInt(String path, Integer... def) {
-        return value(bukkitConfig.getInt(path), 0, def);
+    public Integer getInt(String path) {
+        return bukkitConfig.getInt(path);
     }
 
     @Override
-    public long getLong(String path, Long... def) {
-        return value(bukkitConfig.getLong(path), 0L, def);
+    public Long getLong(String path) {
+        return bukkitConfig.getLong(path);
     }
 
     @Override
-    public double getDouble(String path, Double... def) {
-        return value(bukkitConfig.getDouble(path), 0D, def);
+    public Double getDouble(String path) {
+        return bukkitConfig.getDouble(path);
     }
 
     @Override
-    public boolean getBoolean(String path, Boolean... def) {
-        return value(bukkitConfig.getBoolean(path), false, def);
+    public Boolean getBoolean(String path) {
+        return bukkitConfig.getBoolean(path);
     }
 
-    @SafeVarargs
     @Override
-    public final List<String> getStringList(String path, List<String>... def) {
-        return value(bukkitConfig.getStringList(path), new ArrayList<>(), def);
+    public final List<String> getStringList(String path) {
+        return bukkitConfig.getStringList(path);
     }
 
     @SuppressWarnings("unchecked")
-    @SafeVarargs
     @Override
-    public final List<FileConfiguration> getConfigList(String path, List<FileConfiguration>... def) {
+    public final List<FileConfiguration> getConfigList(String path) {
         List<?> list = getList(path);
 
         for (Object obj : list) {
@@ -87,12 +84,11 @@ public final class SpigotFileConfiguration extends AbstractFileConfiguration {
             }
         }
 
-        return value(null, new ArrayList<>(), def);
+        return null;
     }
 
-    @SafeVarargs
     @Override
-    public final List<?> getList(String path, List<Object>... def) {
-        return value(bukkitConfig.getList(path), new ArrayList<>(), def);
+    public final List<?> getList(String path) {
+        return bukkitConfig.getList(path);
     }
 }

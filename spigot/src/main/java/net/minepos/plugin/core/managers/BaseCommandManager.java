@@ -1,7 +1,7 @@
 package net.minepos.plugin.core.managers;
 
 import com.google.inject.Inject;
-import net.minepos.plugin.MineposPlugin;
+import net.minepos.plugin.MineposJavaPlugin;
 import net.minepos.plugin.core.storage.file.GFile;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -22,7 +22,7 @@ import java.util.List;
 // ------------------------------
 public final class BaseCommandManager {
     @Inject private GFile gFile;
-    @Inject private MineposPlugin main;
+    @Inject private MineposJavaPlugin main;
     @Inject private CommandManager commandManager;
 
     private CommandMap commandMap;

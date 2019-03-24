@@ -1,6 +1,6 @@
 name: MinePoS
 version: @version@
-main: net.minepos.plugin.MineposPlugin
+main: net.minepos.plugin.MineposJavaPlugin
 description: MinePoS plugin
 author: PiggyPiglet
 website: https://minepos.net

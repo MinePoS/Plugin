@@ -32,7 +32,9 @@ public final class CommandManager {
         for (Command command : commands) {
             Commands cmd = command.getCommand();
 
-            if (StringUtils.startsWith(commandsCfg.getStringList("commands")))
+            if (StringUtils.startsWith(commandsCfg.getStringList("commands"))) {
+
+            }
         }
     }
 }

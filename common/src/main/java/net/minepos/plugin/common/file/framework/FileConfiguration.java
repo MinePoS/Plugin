@@ -7,23 +7,43 @@ import java.util.List;
 // https://www.piggypiglet.me
 // ------------------------------
 public interface FileConfiguration {
-    Object get(String path, Object... def);
+    Object get(String path);
 
-    FileConfiguration getConfigSection(String path, FileConfiguration... def);
+    Object get(String path, Object def);
 
-    String getString(String path, String... def);
+    FileConfiguration getConfigSection(String path);
 
-    int getInt(String path, Integer... def);
+    FileConfiguration getConfigSection(String path, FileConfiguration def);
 
-    long getLong(String path, Long... def);
+    String getString(String path);
 
-    double getDouble(String path, Double... def);
+    String getString(String path, String def);
 
-    boolean getBoolean(String path, Boolean... def);
+    Integer getInt(String path);
 
-    List<String> getStringList(String path, List<String>... def);
+    int getInt(String path, int def);
 
-    List<FileConfiguration> getConfigList(String path, List<FileConfiguration>... def);
+    Long getLong(String path);
 
-    List<?> getList(String path, List<Object>... def);
+    long getLong(String path, long def);
+
+    Double getDouble(String path);
+
+    double getDouble(String path, double def);
+
+    Boolean getBoolean(String path);
+
+    boolean getBoolean(String path, boolean def);
+
+    List<String> getStringList(String path);
+
+    List<String> getStringList(String path, List<String> def);
+
+    List<FileConfiguration> getConfigList(String path);
+
+    List<FileConfiguration> getConfigList(String path, List<FileConfiguration> def);
+
+    List<?> getList(String path);
+
+    List<?> getList(String path, List<?> def);
 }

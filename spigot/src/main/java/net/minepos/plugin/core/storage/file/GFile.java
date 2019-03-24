@@ -1,7 +1,7 @@
 package net.minepos.plugin.core.storage.file;
 
 import com.google.inject.Singleton;
-import net.minepos.plugin.MineposPlugin;
+import net.minepos.plugin.MineposJavaPlugin;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,7 +31,7 @@ public final class GFile {
                 file.getParentFile().mkdirs();
 
                 if (file.createNewFile()) {
-                    if (net.minepos.plugin.core.utils.file.FileUtils.exportResource(MineposPlugin.class.getResourceAsStream(internalPath), externalPath)) {
+                    if (net.minepos.plugin.core.utils.file.FileUtils.exportResource(MineposJavaPlugin.class.getResourceAsStream(internalPath), externalPath)) {
                         insertIntoMap(name, file);
 
                         logger.info(name + " successfully created & loaded.");
